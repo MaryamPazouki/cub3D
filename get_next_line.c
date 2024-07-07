@@ -10,3 +10,26 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "get_next_line.h"
+
+char *get_next_line(int fd)
+{
+int  fd;
+char *line;
+char *buf;
+
+if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, NULL, 0) < 0)
+	return (NULL);
+
+buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+if (!buf)
+	return(NULL);
+
+create_list();
+
+get_newline(fd, buf, line);
+
+polish_line(line);
+
+return (line);
+}

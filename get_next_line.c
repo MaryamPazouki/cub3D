@@ -14,17 +14,18 @@
 
 char *get_next_line(int fd)
 {
-int  fd;
+
 char *line;
 char *buf;
 
-if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, NULL, 0) < 0)
+if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &line, 0) < 0)
 	return (NULL);
 
 buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 if (!buf)
 	return(NULL);
 
+// create a list till we get the \n
 create_list();
 
 get_newline(fd, buf, line);

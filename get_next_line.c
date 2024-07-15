@@ -17,6 +17,7 @@ char *get_next_line(int fd)
 
 static t_list *lst;
 char *buf;
+char *next_line;
 
 *lst = NULL;
 
@@ -33,9 +34,9 @@ if(!lst)
  return(NULL);
 
 
-get_newline(fd, buf, line);
+next_line = get_nextline(fd, buf, line);
 
-polish_line(line);
+clear_list(&lst);
 
-return (line);
+return (next_line);
 }

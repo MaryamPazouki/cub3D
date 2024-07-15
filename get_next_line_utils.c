@@ -11,15 +11,7 @@
 /* ************************************************************************** */
 #include "get_next_line.h"
 
-create_list()
-
-get_newline(fd, buf, line)
-
-polish_line(line)
-
-
-
-int lst_size(t_list lst)
+int lst_size(t_list *lst)
 {
     int i;
     int len;
@@ -46,6 +38,47 @@ int lst_size(t_list lst)
 }
 
 
+void	ft_lstadd_back(t_list **lst, char *new_buf)
+{
+	t_list	*new_node;
+    t_list *last;
+
+	if (!lst || !new_buf)
+		return ;
+     new_node = malloc(sizeof(t_list));
+    if(!new_node)
+        return ;
+	if (!(*lst))
+	{
+		*lst = new_node;
+		return ;
+	}
+   
+	last = *lst;
+	while (last->next)
+		last = last->next;
+	last->next = new_node;
+    new_node->content = new_buf;
+    new_node->next = NULL;
+}
+
+
+int is_newline(t_list *lst)
+{
+    int i;
+
+    if(!lst)
+        return(0);
+    i = 0;
+    while(lst->content[i] != '\0')
+    {
+        if(lst->content[i] == '\n')
+            return(1);
+        ++i;
+    }
+    return(0);
+}
+
 void create_lst(char **lst, int fd)
 {
     char *text_buf;
@@ -68,19 +101,50 @@ void create_lst(char **lst, int fd)
 }
 
 
-void	ft_lstadd_back(t_list **lst, t_list *new)
+char get_nextline(t_list *lst)
 {
-	t_list	*last;
+    char *line;
+    int i;
+    int j;
+    int len;
 
-	if (!lst || !new)
-		return ;
-	if (!(*lst))
-	{
-		*lst = new;
-		return ;
-	}
-	last = *lst;
-	while (last->next)
-		last = last->next;
-	last->next = new;
+    len = lst_size(lst);
+    line = malloc(len + 1);
+    if(!line)
+        return(NULL);
+    i = 0;
+    while(lst)
+    {
+        j = 0;
+        while(lst->content[j] != '\0')
+        {
+            if(lst->content[j] == '\n')
+            {
+                line[i++] = '\n';
+                line[i] = '\0';
+                return(line);
+            }
+            line[i] = lst->content[j];
+            ++i;
+            ++j;
+        }
+        lst = lst->next;
+    }
+    line[i] = '\0';
+    return(line);
 }
+
+void clear_list(t_list **lst)
+{
+    t_list *tmp;
+
+    while(*lst)
+    {
+        tmp = (*lst)->next;
+        free((*lst)->content);
+        free(*lst);
+        *lst = tmp;
+    }
+    *lst = NULL;
+}
+

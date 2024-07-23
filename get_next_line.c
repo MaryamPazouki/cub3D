@@ -14,29 +14,24 @@
 
 char *get_next_line(int fd)
 {
+	static t_list *lst;
+	char *buf;
+	char *next_line;
 
-static t_list *lst;
-char *buf;
-char *next_line;
+	lst = NULL;
 
-*lst = NULL;
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &lst, 0) < 0)
+		return (NULL);
 
-if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &lst, 0) < 0)
-	return (NULL);
-
-buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
-if (!buf)
-	return(NULL);
-
-// create a list till we get the \n
-create_list(&lst, fd);
-if(!lst)
- return(NULL);
+	// create a list till we get the \n
+	create_list(&lst, fd);
+	if(!lst)
+		return(NULL);
 
 
-next_line = get_nextline(fd, buf, line);
+	next_line = get_nextline(lst);
 
-clear_list(&lst);
+	clear_list(&lst);
 
-return (next_line);
+	return (next_line);
 }

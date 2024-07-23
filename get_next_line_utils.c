@@ -62,7 +62,7 @@ void	ft_lstadd_back(t_list **lst, char *new_buf)
         last = *lst;
 	    while (last->next)
         {
-            printf("Traversing node with content: %s\n", last->content);
+            //printf("Traversing node with content: %s\n", last->content);
             last = last->next;
         }
 	    last->next = new_node;
@@ -147,11 +147,16 @@ char *get_newline(t_list *lst)
 void clear_lst(t_list **lst)
 {
     t_list *tmp;
-
+    if(!lst)
+        return ;
     while(*lst)
     {
         tmp = (*lst)->next;
-        free((*lst)->content);
+        if ((*lst)->content)
+        {
+            free((*lst)->content);
+            (*lst)-> content = NULL;
+        }
         free(*lst);
         *lst = tmp;
     }

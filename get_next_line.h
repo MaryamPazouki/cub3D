@@ -22,11 +22,11 @@
 # include <stdint.h>
 
 
-typedef struct t_list
+typedef struct s_list
 {
-	char* content;
-	struct s_list *next;
-}t_list;
+	char*	content;
+	struct 	s_list *next;
+}		t_list;
 
 
 char	*get_next_line(int fd);
@@ -34,7 +34,7 @@ int 	lst_size(t_list *lst);
 void	ft_lstadd_back(t_list **lst, char *new_buf);
 int		is_newline(t_list *lst);
 void	create_lst(t_list **lst, int fd);
-char	get_newline(t_list *lst);
+char	*get_newline(t_list *lst);
 void	clear_lst(t_list **lst);
 
 #endif

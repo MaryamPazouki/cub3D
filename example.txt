@@ -1,0 +1,12 @@
+c2r11s10% make clean
+rm -rf get_next_line.o get_next_line_utils.o
+c2r11s10% gcc -o output *.c    
+c2r11s10% ./output
+c2r11s10% gcc -o output *.c 
+c2r11s10% ./output          
+c2r11s10% gcc -o output *.c 
+c2r11s10% ./output          
+c2r11s10% gcc -o output *.c 
+c2r11s10% ./output          
+c2r11s10% 
+c2r11s10% 

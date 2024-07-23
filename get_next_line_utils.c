@@ -66,11 +66,8 @@ void	ft_lstadd_back(t_list **lst, char *new_buf)
 
 int is_newline(t_list *lst)
 {
-    int i;
-
     if(!lst)
         return(0);
-    i = 0;
     while(lst-> content && *lst->content != '\0')
     {
         if(*lst->content == '\n')
@@ -106,7 +103,7 @@ void create_lst(t_list **lst, int fd)
 }
 
 
-char get_newline(t_list *lst)
+char *get_newline(t_list *lst)
 {
     char *line;
     int i;

@@ -14,14 +14,10 @@ int main(void) {
 		printf("Error opening file\n");
 		return (1);
 	}
-	line = get_next_line(fd);
-	if (line != NULL) 
+	while ((line = get_next_line(fd)) != NULL) 
 	{
     	printf("%s\n", line);
-    	free(line);
-	} else 
-	{
-    	printf("get_next_line returned NULL.\n");
+		free(line);
 	}
 	close(fd);
 	return (0);

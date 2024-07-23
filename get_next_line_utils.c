@@ -24,7 +24,7 @@ int lst_size(t_list *lst)
         i=0;
         while(lst-> content[i] != '\0')
         {
-            if(lst->content[i] == '\n')
+            if(lst -> content[i] == '\n')
             {
                 ++len;
                 return(len);

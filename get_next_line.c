@@ -16,7 +16,7 @@ static t_list *lst;
 
 char *get_next_line(int fd)
 {
-	char *new_line;
+	char	*new_line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &lst, 0) < 0)
 		return (NULL);
@@ -25,8 +25,12 @@ char *get_next_line(int fd)
 	create_lst(&lst, fd);
 	if(!lst)
 		return(NULL);
-
-
+	// while(!is_newline(lst))
+	// {
+	// 	create_lst(&lst, fd);
+	// 	if(!lst)
+	// 		return(NULL);
+	// }
 	new_line = get_newline(lst);
 
 	clear_lst(&lst);

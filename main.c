@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 int main(void) {
-    int fd;
+	int fd;
 	char *line;
 
 	fd = open("example.txt", O_RDONLY);
@@ -16,7 +16,7 @@ int main(void) {
 	}
 	while ((line = get_next_line(fd)) != NULL) 
 	{
-    	printf("%s\n", line);
+		printf("%s\n", line);
 		free(line);
 	}
 	close(fd);

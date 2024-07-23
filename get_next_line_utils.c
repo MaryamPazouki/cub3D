@@ -62,7 +62,7 @@ void	ft_lstadd_back(t_list **lst, char *new_buf)
         last = *lst;
 	    while (last->next)
         {
-            //printf("Traversing node with content: %s\n", last->content);
+            //printf("Traversing node with content: %s\n", last->conten	            
             last = last->next;
         }
 	    last->next = new_node;
@@ -74,11 +74,12 @@ int is_newline(t_list *lst)
 {
     if(!lst)
         return(0);
-    while(lst-> content && *lst->content != '\0')
+    char *content_ptr = lst->content;
+    while(content_ptr && *content_ptr != '\0')
     {
-        if(*lst->content == '\n')
+        if(*content_ptr == '\n')
             return(1);
-        lst->content++;
+        content_ptr++;
     }
     return(0);
 }
@@ -88,19 +89,25 @@ void create_lst(t_list **lst, int fd)
     char *text_buf;
     int read_size;
 
-    while(!is_newline(*lst))
+    while (!is_newline(*lst))
     {
-        text_buf = malloc( BUFFER_SIZE + 1);
-        if(!text_buf)
-        {   
+        text_buf = malloc(BUFFER_SIZE + 1);
+        if (!text_buf)
+        {
             printf("Failed to allocate memory for new node\n");
-            return ;
+            return;
         }
         read_size = read(fd, text_buf, BUFFER_SIZE);
-        if(read_size <= 0)
+        if (read_size < 0)
+        {
+            printf("Failed to read from file descriptor\n");
+            free(text_buf);
+            return;
+        }
+        else if (read_size == 0)
         {
             free(text_buf);
-            return ;
+            return;
         }
         text_buf[read_size] = '\0';
         ft_lstadd_back(lst, text_buf);
@@ -110,6 +117,9 @@ void create_lst(t_list **lst, int fd)
 
 char *get_newline(t_list *lst)
 {
+    if (!lst)
+        return NULL;
+
     char *line;
     int i;
     int j;
@@ -117,22 +127,22 @@ char *get_newline(t_list *lst)
 
     len = lst_size(lst);
     line = malloc(len + 1);
-    if(!line)
+    if (!line)
     {   
         printf("Failed to allocate memory for new node\n");
-        return(NULL);
+        return NULL;
     }    
     i = 0;
-    while(lst)
+    while (lst)
     {
         j = 0;
-        while(lst->content[j] != '\0')
+        while (lst->content[j] != '\0')
         {
-            if(lst->content[j] == '\n')
+            if (lst->content[j] == '\n')
             {
                 line[i++] = '\n';
                 line[i] = '\0';
-                return(line);
+                return line;
             }
             line[i] = lst->content[j];
             ++i;
@@ -141,7 +151,7 @@ char *get_newline(t_list *lst)
         lst = lst->next;
     }
     line[i] = '\0';
-    return(line);
+    return line;
 }
 
 void clear_lst(t_list **lst)

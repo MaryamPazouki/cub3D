@@ -9,167 +9,151 @@
 /*   Updated: 2024-07-07 14:31:55 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "get_next_line.h"
 
-int lst_size(t_list *lst)
+int	lst_size(t_list *lst)
 {
-    int i;
-    int len;
+	int	i;
+	int	len;
 
-    if(!lst)
-        return(0);
-    len = 0;
-    while(lst)
-    {
-        i=0;
-        while(lst-> content[i] != '\0')
-        {
-            if(lst -> content[i] == '\n')
-            {
-                ++len;
-                return(len);
-            }
-            ++len;
-            ++i;
-        }
-        lst = lst->next;
-    }
-    return(len);
+	if (!lst)
+		return (0);
+	len = 0;
+	while (lst)
+	{
+		i = 0;
+		while (lst -> content[i] != '\0')
+    	{
+			++len;
+			if (lst -> content[i] == '\n')
+			{
+				return (len);
+			}
+			++i;
+    	}
+		lst = lst-> next;
+	}
+	return (len);
 }
 
-
-void	ft_lstadd_back(t_list **lst, char *new_buf)
-{
-	t_list	*new_node;
-    t_list *last;
+void	ft_lstadd_back(t_list **lst, char *new_buf) {
+	t_list *new_node;
+	t_list *last;
 
 	if (!lst || !new_buf)
-		return ;
-    new_node = malloc(sizeof(t_list));
-    if(!new_node)
-    {   
-        printf("Failed to allocate memory for new node\n");
-        return ;
-    }
-    new_node->content = new_buf;
-    new_node->next = NULL;
-	if (!(*lst))
-	{
+    	return ;
+	new_node = malloc(sizeof(t_list));
+	if (!new_node) 
+		return;
+	new_node->content = new_buf;
+	new_node->next = NULL;
+
+	if (!*lst) {
 		*lst = new_node;
+	} else {
+		last = *lst;
+		while (last->next) 
+			last = last->next;
+		last->next = new_node;
 	}
-    else 
-    {
-        last = *lst;
-	    while (last->next)
-        {
-            //printf("Traversing node with content: %s\n", last->conten	            
-            last = last->next;
-        }
-	    last->next = new_node;
-    }
 }
 
-
-int is_newline(t_list *lst)
+int	is_newline(t_list *lst)
 {
-    if(!lst)
-        return(0);
-    char *content_ptr = lst->content;
-    while(content_ptr && *content_ptr != '\0')
-    {
-        if(*content_ptr == '\n')
-            return(1);
-        content_ptr++;
-    }
-    return(0);
+	char	*content_ptr;
+
+	if (!lst)
+		return (0);
+	content_ptr = lst->content;
+	while (content_ptr && *content_ptr != '\0')
+	{
+		if (*content_ptr == '\n')
+			return (1);
+		content_ptr++;
+	}
+	return (0);
 }
 
-void create_lst(t_list **lst, int fd)
+void	create_lst(t_list **lst, int fd)
 {
-    char *text_buf;
-    int read_size;
+	char	*text_buf;
+	int		read_size;
 
-    while (!is_newline(*lst))
-    {
-        text_buf = malloc(BUFFER_SIZE + 1);
-        if (!text_buf)
-        {
-            printf("Failed to allocate memory for new node\n");
-            return;
-        }
-        read_size = read(fd, text_buf, BUFFER_SIZE);
-        if (read_size < 0)
-        {
-            printf("Failed to read from file descriptor\n");
-            free(text_buf);
-            return;
-        }
-        else if (read_size == 0)
-        {
-            free(text_buf);
-            return;
-        }
-        text_buf[read_size] = '\0';
-        ft_lstadd_back(lst, text_buf);
-    }
+	while (!is_newline(*lst))
+	{
+		text_buf = malloc(BUFFER_SIZE + 1);
+		if (!text_buf)
+			return ;
+		read_size = read(fd, text_buf, BUFFER_SIZE);
+		if (read_size <= 0)
+		{
+			free(text_buf);
+			return ;
+		}
+		text_buf[read_size] = '\0';
+		ft_lstadd_back(lst, text_buf);
+	}
 }
 
-
-char *get_newline(t_list *lst)
+char	*get_newline(t_list *lst)
 {
-    if (!lst)
-        return NULL;
+	char	*line;
+	int		i;
+	int		j;
+	int		len;
 
-    char *line;
-    int i;
-    int j;
-    int len;
-
-    len = lst_size(lst);
-    line = malloc(len + 1);
-    if (!line)
-    {   
-        printf("Failed to allocate memory for new node\n");
-        return NULL;
-    }    
-    i = 0;
-    while (lst)
-    {
-        j = 0;
-        while (lst->content[j] != '\0')
-        {
-            if (lst->content[j] == '\n')
-            {
-                line[i++] = '\n';
-                line[i] = '\0';
-                return line;
-            }
-            line[i] = lst->content[j];
-            ++i;
-            ++j;
-        }
-        lst = lst->next;
-    }
-    line[i] = '\0';
-    return line;
+	//if (!lst) 
+	//	return (NULL);
+	len = lst_size(lst);
+	line = malloc(len + 1);
+	if (!line)
+		return (NULL);
+	i = 0;
+	while (lst)
+	{
+		j = 0;
+		while (lst -> content[j] != '\0')
+		{	
+			line[i++] = lst->content[j];
+			if (lst -> content[j] == '\n')
+			{
+				line[i] = '\0';
+				return (line);
+			}
+			j++;
+		}
+		lst = lst->next;
+	}
+	line[i] = '\0';
+	return (line);
 }
 
-void clear_lst(t_list **lst)
+// void clear_lst(t_list **lst) {
+// 	while (*lst) {
+// 		t_list *tmp = (*lst)->next;
+// 		free((*lst)->content);
+// 		free(*lst);
+// 		*lst = tmp;
+// 	}
+// }
+
+void	clear_lst(t_list **lst)
 {
-    t_list *tmp;
-    if(!lst)
-        return ;
-    while(*lst)
-    {
-        tmp = (*lst)->next;
-        if ((*lst)->content)
-        {
-            free((*lst)->content);
-            (*lst)-> content = NULL;
-        }
-        free(*lst);
-        *lst = tmp;
-    }
-    *lst = NULL;
-}
+	t_list	*tmp;
 
+	//if (!lst)
+	//	return ;
+	while (*lst)
+	{
+		tmp = (*lst)->next;
+		if ((*lst)-> content)
+		{
+			free((*lst)-> content);
+			(*lst)-> content = NULL;
+		}
+		free(*lst);
+		*lst = tmp;
+	}
+	*lst = NULL;
+}

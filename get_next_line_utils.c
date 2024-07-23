@@ -45,21 +45,22 @@ void	ft_lstadd_back(t_list **lst, char *new_buf)
 
 	if (!lst || !new_buf)
 		return ;
-     new_node = malloc(sizeof(t_list));
+    new_node = malloc(sizeof(t_list));
     if(!new_node)
         return ;
+    new_node->content = new_buf;
+    new_node->next = NULL;
 	if (!(*lst))
 	{
 		*lst = new_node;
-		return ;
 	}
-   
-	last = *lst;
-	while (last->next)
-		last = last->next;
-	last->next = new_node;
-    new_node->content = new_buf;
-    new_node->next = NULL;
+    else 
+    {
+        last = *lst;
+	    while (last->next)
+		    last = last->next;
+	    last->next = new_node;
+    }
 }
 
 
@@ -70,27 +71,31 @@ int is_newline(t_list *lst)
     if(!lst)
         return(0);
     i = 0;
-    while(lst->content[i] != '\0')
+    while(lst-> content && *lst->content != '\0')
     {
-        if(lst->content[i] == '\n')
+        if(*lst->content == '\n')
             return(1);
-        ++i;
+        lst->content++;
     }
     return(0);
 }
 
-void create_lst(char **lst, int fd)
+void create_lst(t_list **lst, int fd)
 {
     char *text_buf;
     int read_size;
 
     while(!is_newline(*lst))
     {
-        text_buf = malloc(BUFFER_SIZE + 1);
+        text_buf = malloc( BUFFER_SIZE + 1);
         if(!text_buf)
             return ;
         read_size = read(fd, text_buf, BUFFER_SIZE);
-        if(!read_size)
+        if(read_size <= 0)
+        {
+            free(text_buf);
+            return ;
+        }
         {
             free(text_buf);
             return ;
@@ -101,7 +106,7 @@ void create_lst(char **lst, int fd)
 }
 
 
-char get_nextline(t_list *lst)
+char get_newline(t_list *lst)
 {
     char *line;
     int i;
@@ -134,7 +139,7 @@ char get_nextline(t_list *lst)
     return(line);
 }
 
-void clear_list(t_list **lst)
+void clear_lst(t_list **lst)
 {
     t_list *tmp;
 

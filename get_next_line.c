@@ -15,8 +15,7 @@
 char *get_next_line(int fd)
 {
 	static t_list *lst;
-	char *buf;
-	char *next_line;
+	char next_line;
 
 	lst = NULL;
 
@@ -24,14 +23,15 @@ char *get_next_line(int fd)
 		return (NULL);
 
 	// create a list till we get the \n
-	create_list(&lst, fd);
+	create_lst(&lst, fd);
 	if(!lst)
 		return(NULL);
 
 
-	next_line = get_nextline(lst);
+	next_line = get_newline(lst);
 
-	clear_list(&lst);
+	clear_lst(&lst);
 
 	return (next_line);
 }
+

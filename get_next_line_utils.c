@@ -103,8 +103,8 @@ char	*get_newline(t_list *lst)
 	int		j;
 	int		len;
 
-	//if (!lst) 
-	//	return (NULL);
+	if (!lst) 
+		return (NULL);
 	len = lst_size(lst);
 	line = malloc(len + 1);
 	if (!line)
@@ -115,12 +115,12 @@ char	*get_newline(t_list *lst)
 		j = 0;
 		while (lst -> content[j] != '\0')
 		{	
-			line[i++] = lst->content[j];
 			if (lst -> content[j] == '\n')
 			{
 				line[i] = '\0';
 				return (line);
 			}
+			line[i++] = lst->content[j];
 			j++;
 		}
 		lst = lst->next;
@@ -129,14 +129,6 @@ char	*get_newline(t_list *lst)
 	return (line);
 }
 
-// void clear_lst(t_list **lst) {
-// 	while (*lst) {
-// 		t_list *tmp = (*lst)->next;
-// 		free((*lst)->content);
-// 		free(*lst);
-// 		*lst = tmp;
-// 	}
-// }
 
 void	clear_lst(t_list **lst)
 {

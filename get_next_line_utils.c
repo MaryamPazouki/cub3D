@@ -47,7 +47,10 @@ void	ft_lstadd_back(t_list **lst, char *new_buf)
 		return ;
     new_node = malloc(sizeof(t_list));
     if(!new_node)
+    {   
+        printf("Failed to allocate memory for new node\n");
         return ;
+    }
     new_node->content = new_buf;
     new_node->next = NULL;
 	if (!(*lst))
@@ -58,7 +61,10 @@ void	ft_lstadd_back(t_list **lst, char *new_buf)
     {
         last = *lst;
 	    while (last->next)
-		    last = last->next;
+        {
+            printf("Traversing node with content: %s\n", last->content);
+            last = last->next;
+        }
 	    last->next = new_node;
     }
 }
@@ -86,13 +92,12 @@ void create_lst(t_list **lst, int fd)
     {
         text_buf = malloc( BUFFER_SIZE + 1);
         if(!text_buf)
-            return ;
-        read_size = read(fd, text_buf, BUFFER_SIZE);
-        if(read_size <= 0)
-        {
-            free(text_buf);
+        {   
+            printf("Failed to allocate memory for new node\n");
             return ;
         }
+        read_size = read(fd, text_buf, BUFFER_SIZE);
+        if(read_size <= 0)
         {
             free(text_buf);
             return ;
@@ -113,7 +118,10 @@ char *get_newline(t_list *lst)
     len = lst_size(lst);
     line = malloc(len + 1);
     if(!line)
+    {   
+        printf("Failed to allocate memory for new node\n");
         return(NULL);
+    }    
     i = 0;
     while(lst)
     {

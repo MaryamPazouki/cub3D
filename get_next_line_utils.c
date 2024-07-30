@@ -62,7 +62,6 @@ void	ft_lstadd_back(t_list **lst, char *new_buf)
     new_node->content = new_buf;
     new_node->next = NULL;
 }
-
 int	is_newline(t_list *lst)
 {
     int i;

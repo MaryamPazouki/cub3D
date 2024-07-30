@@ -132,6 +132,25 @@ char	*get_newline(t_list *lst)
     return(line);
 }
 
+void nextline_node(t_list **lst)
+{
+	t_list	*tmp;
+	t_list	*nl_node
+	char	*buf;
+	int i;
+	int j;
+
+	buf = malloc(BUFFER_SIZE +1);
+    nl_node = malloc(sizeof(t_list));
+    if(!buf || !nl_node)
+        return;
+
+	if (!buf)
+		return ;
+
+	
+}
+
 void clear_list(t_list **lst)
 {
     t_list *tmp;

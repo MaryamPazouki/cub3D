@@ -12,31 +12,18 @@
 
 #include "get_next_line.h"
 
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
+	static t_list	*lst;
+	char			*new_line;
 
-static t_list *lst;
-char *buf;
-char *next_line;
-
-*lst = NULL;
-
-if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &lst, 0) < 0)
-	return (NULL);
-
-buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
-if (!buf)
-	return(NULL);
-
-// create a list till we get the \n
-create_list(&lst, fd);
-if(!lst)
- return(NULL);
-
-
-next_line = get_nextline(fd, buf, line);
-
-clear_list(&lst);
-
-return (next_line);
+	lst = NULL;
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &lst, 0) < 0 )
+		return (NULL);
+	create_lst (&lst, fd);
+	if (!lst)
+		return (NULL);
+	new_line = get_newline(lst);
+	clear_lst (&lst);
+	return (new_line);
 }

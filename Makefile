@@ -1,13 +1,13 @@
-SRC = 	
+SRC = get_next_line.c\
+	  get_next_line_utils.c\
 
 
-NAME	=	
+NAME	=	get_next_line
 OBJS = $(SRC:.c=.o)
 
 CC = cc
 CFLAGS = -Wall -Werror -Wextra
 
-//-D BUFFER_SIZE=42 <files>.c
 RM = rm -rf
 AR = ar crs
 

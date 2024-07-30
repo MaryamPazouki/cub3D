@@ -34,8 +34,11 @@ char	*get_next_line(int fd);
 int		lst_size(t_list *lst);
 void	ft_lstadd_back(t_list **lst, char *new_buf);
 int		is_newline(t_list *lst);
-void	create_lst(t_list **lst, int fd);
+void	create_list(t_list **lst, int fd);
 char	*get_newline(t_list *lst);
-void	clear_lst(t_list **lst);
+void	clear_list(t_list **lst, t_list	*nl_node,char	*buf);
+void	node_with_nl(t_list **lst);
+t_list	*ft_lstlast(t_list *lst);
+
 
 #endif

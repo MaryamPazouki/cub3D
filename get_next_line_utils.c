@@ -38,6 +38,17 @@ int	lst_size(t_list *lst)
 	return(len);
 }
 
+t_list	*ft_lstlast(t_list *lst)
+{
+	if (!lst)
+		return (NULL);
+	while (lst -> next)
+	{
+		lst = lst -> next;
+	}
+	return (lst);
+}
+
 
 void	ft_lstadd_back(t_list **lst, char *new_buf)
 {
@@ -55,7 +66,7 @@ void	ft_lstadd_back(t_list **lst, char *new_buf)
 		return ;
 	}
    
-	last = ft_lstlast(lst);
+	last = ft_lstlast(*lst);
 	last->next = new_node;
 	new_node->content = new_buf;
 	new_node->next = NULL;
@@ -76,7 +87,7 @@ int	is_newline(t_list *lst)
 	return(0);
 }
 
-void	create_lst(t_list **lst, int fd)
+void	create_list(t_list **lst, int fd)
 {
 	char *text_buf;
 	int read_size;
@@ -130,21 +141,12 @@ char	*get_newline(t_list *lst)
 	return(line);
 }
 
-t_list	*ft_lstlast(t_list *lst)
-{
-	if (!lst)
-		return (NULL);
-	while ((lst -> next != NULL))
-	{
-		lst = lst -> next;
-	}
-	return (lst);
-}
+
 
 void node_with_nl(t_list **lst)
 {
 	t_list	*last_node;
-	t_list	*nl_node
+	t_list	*nl_node;
 	char	*buf;
 	int i;
 	int j;
@@ -156,7 +158,7 @@ void node_with_nl(t_list **lst)
 	if(!buf || !nl_node)
 		return;
 	last_node = ft_lstlast(*lst);
-	while(last_node->content[i] != '\n' && last_node->conten[i])
+	while(last_node->content[i] != '\n' && last_node->content[i])
 		++i;
 	while(last_node->content[i] && last_node -> content[++i])
 		buf[j++] = last_node->content[i];	
@@ -166,11 +168,11 @@ void node_with_nl(t_list **lst)
 	clear_list(lst, nl_node, buf);
 }
 
-void clear_list(t_list **lst, t_list	**nl_node,char	*buf)
+void clear_list(t_list **lst, t_list	*nl_node,char	*buf)
 {
 	t_list *tmp;
 
-	if (!list)
+	if (!lst)
 		return ;
 	while(*lst)
 	{
@@ -181,10 +183,10 @@ void clear_list(t_list **lst, t_list	**nl_node,char	*buf)
 	}
 	*lst = NULL;
 	if (nl_node->content[0])
-		lst = nl_node;
+		*lst = nl_node;
 	else
 	{
 		free(buf);
-		free(nl_code);
+		free(nl_node);
 	}
 }

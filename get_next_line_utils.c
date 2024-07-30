@@ -55,9 +55,7 @@ void	ft_lstadd_back(t_list **lst, char *new_buf)
 		return ;
 	}
    
-	last = *lst;
-	while (last->next)
-		last = last->next;
+	last = ft_lstlast(lst);
 	last->next = new_node;
 	new_node->content = new_buf;
 	new_node->next = NULL;
@@ -132,6 +130,17 @@ char	*get_newline(t_list *lst)
 	return(line);
 }
 
+t_list	*ft_lstlast(t_list *lst)
+{
+	if (!lst)
+		return (NULL);
+	while ((lst -> next != NULL))
+	{
+		lst = lst -> next;
+	}
+	return (lst);
+}
+
 void node_with_nl(t_list **lst)
 {
 	t_list	*last_node;
@@ -146,7 +155,7 @@ void node_with_nl(t_list **lst)
 	nl_node = malloc(sizeof(t_list));
 	if(!buf || !nl_node)
 		return;
-	last_node = is_last_node(*lst);
+	last_node = ft_lstlast(*lst);
 	while(last_node->content[i] != '\n' && last_node->conten[i])
 		++i;
 	while(last_node->content[i] && last_node -> content[++i])

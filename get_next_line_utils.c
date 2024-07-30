@@ -149,16 +149,20 @@ void node_with_nl(t_list **lst)
 	last_node = is_last_node(*lst);
 	while(last_node->content[i] != '\n' && last_node->conten[i])
 		++i;
-	while(last_node->content[i] && last_node -> content[i++])
+	while(last_node->content[i] && last_node -> content[++i])
 		buf[j++] = last_node->content[i];	
 	buf[j] = '\0';
+	nl_node->content = buf;
+	nl_node->next = NULL;
 	clear_list(lst, nl_node, buf);
 }
 
-void clear_list(t_list **lst)
+void clear_list(t_list **lst, t_list	**nl_node,char	*buf)
 {
 	t_list *tmp;
 
+	if (!list)
+		return ;
 	while(*lst)
 	{
 		tmp = (*lst)->next;
@@ -167,4 +171,11 @@ void clear_list(t_list **lst)
 		*lst = tmp;
 	}
 	*lst = NULL;
+	if (nl_node->content[0])
+		lst = nl_node;
+	else
+	{
+		free(buf);
+		free(nl_code);
+	}
 }

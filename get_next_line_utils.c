@@ -134,8 +134,8 @@ void	clear_lst(t_list **lst)
 {
 	t_list	*tmp;
 
-	//if (!lst)
-	//	return ;
+	if (!lst)
+		return ;
 	while (*lst)
 	{
 		tmp = (*lst)->next;

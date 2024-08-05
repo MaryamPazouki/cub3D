@@ -98,7 +98,7 @@ void	create_list(t_list **lst, int fd)
 		if(!text_buf)
 			return ;
 		read_size = read(fd, text_buf, BUFFER_SIZE);
-		if(!read_size)
+		if(read_size <= 0) // changes made here
 		{
 			free(text_buf);
 			return ;
@@ -132,9 +132,7 @@ char	*get_newline(t_list *lst)
 				line[i] = '\0';
 				return(line);
 			}
-			line[i] = lst->content[j];
-			++i;
-			++j;
+			line[i++] = lst->content[j++];
 		}
 		lst = lst->next;
 	}

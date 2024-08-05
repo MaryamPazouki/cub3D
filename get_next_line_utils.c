@@ -57,19 +57,19 @@ void	ft_lstadd_back(t_list **lst, char *new_buf)
 
 	if (!lst || !new_buf)
 		return ;
-	 new_node = malloc(sizeof(t_list));
+	new_node = malloc(sizeof(t_list));
 	if(!new_node)
 		return ;
-	if (!(*lst))
-	{
-		*lst = new_node;
-		return ;
-	}
-   
-	last = ft_lstlast(*lst);
-	last->next = new_node;
 	new_node->content = new_buf;
 	new_node->next = NULL;
+
+	if (*lst == NULL) {
+		*lst = new_node;
+	} else {
+		last = ft_lstlast(*lst);
+		if (last)
+			last->next = new_node;
+	}
 }
 int	is_newline(t_list *lst)
 {
@@ -114,7 +114,8 @@ char	*get_newline(t_list *lst)
 	int i;
 	int j;
 	int len;
-
+	if (!lst) 
+		return (NULL);
 	len = lst_size(lst);
 	line = malloc(len + 1);
 	if(!line)
@@ -140,8 +141,6 @@ char	*get_newline(t_list *lst)
 	line[i] = '\0';
 	return(line);
 }
-
-
 
 void node_with_nl(t_list **lst)
 {

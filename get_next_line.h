@@ -26,7 +26,7 @@
 
 typedef struct s_list
 {
-	char*			content;
+	char			*content;
 	struct s_list	*next;
 }					t_list;
 
@@ -37,7 +37,7 @@ void	ft_lstadd_back(t_list **lst, char *new_buf);
 int		is_newline(t_list *lst);
 void	create_list(t_list **lst, int fd);
 void	node_with_nl(t_list **lst);
-void	clear_list(t_list **lst, t_list	*nl_node,char	*buf);
+void	clear_list(t_list **lst, t_list	*nl_node, char	*buf);
 void	copy_str(t_list *lst, char *str);
 char	*get_line(t_list *list);
 

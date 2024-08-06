@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
 int	lst_size(t_list *lst)
 {
@@ -90,7 +91,7 @@ int	is_newline(t_list *lst)
 void	create_list(t_list **lst, int fd)
 {
 	char *text_buf;
-	int read_size;
+	int read_size;                                                                                                                                    
 
 	while(!is_newline(*lst))
 	{
@@ -98,7 +99,7 @@ void	create_list(t_list **lst, int fd)
 		if(!text_buf)
 			return ;
 		read_size = read(fd, text_buf, BUFFER_SIZE);
-		if(read_size <= 0) // changes made here
+		if(!read_size)
 		{
 			free(text_buf);
 			return ;
@@ -123,6 +124,11 @@ char	*get_newline(t_list *lst)
 	i = 0;
 	while(lst)
 	{
+		if (!lst->content) // Check for null content
+        {
+            lst = lst->next;
+            continue;
+        }
 		j = 0;
 		while(lst->content[j] != '\0')
 		{
@@ -140,29 +146,75 @@ char	*get_newline(t_list *lst)
 	return(line);
 }
 
+// void node_with_nl(t_list **lst)
+// {
+// 	t_list *last_node;
+// 	t_list *nl_node;
+// 	char *buf;
+// 	int i;
+// 	int j;
+
+// 	if (!lst || !*lst)
+// 		return;
+// 	last_node = ft_lstlast(*lst);
+
+// 	i = 0;
+// 	while (last_node->content[i] != '\n' && last_node->content[i])
+// 		++i;
+// 	if (!last_node->content[i])
+// 		return;
+// 	buf = malloc(BUFFER_SIZE + 1);
+// 	nl_node = malloc(sizeof(t_list));
+// 	if (!buf || !nl_node)
+// 		return;
+// 	j = 0;
+// 	while (last_node->content[i] && last_node->content[++i])
+// 		buf[j++] = last_node->content[i];
+// 	buf[j] = '\0';
+// 	nl_node->content = buf;
+// 	nl_node->next = NULL;
+// 	clear_list(lst, nl_node, buf);
+// }
 void node_with_nl(t_list **lst)
 {
-	t_list	*last_node;
-	t_list	*nl_node;
-	char	*buf;
-	int i;
-	int j;
-	
-	i = 0;
-	j = 0;
-	buf = malloc(BUFFER_SIZE +1);
-	nl_node = malloc(sizeof(t_list));
-	if(!buf || !nl_node)
-		return;
-	last_node = ft_lstlast(*lst);
-	while(last_node->content[i] != '\n' && last_node->content[i])
-		++i;
-	while(last_node->content[i] && last_node -> content[++i])
-		buf[j++] = last_node->content[i];	
-	buf[j] = '\0';
-	nl_node->content = buf;
-	nl_node->next = NULL;
-	clear_list(lst, nl_node, buf);
+    t_list *last_node;
+    t_list *nl_node;
+    char *buf;
+    int i;
+    int j;
+
+    if (!lst || !*lst)
+        return;
+
+    last_node = ft_lstlast(*lst);
+    if (!last_node || !last_node->content)
+        return;
+
+    i = 0;
+    while (last_node->content[i] != '\n' && last_node->content[i])
+        ++i;
+
+    if (!last_node->content[i])
+        return;
+
+    buf = malloc(BUFFER_SIZE + 1);
+    nl_node = malloc(sizeof(t_list));
+    if (!buf || !nl_node)
+    {
+        free(buf);
+        free(nl_node);
+        return;
+    }
+
+    j = 0;
+    while (last_node->content[i] && last_node->content[++i])
+        buf[j++] = last_node->content[i];
+    buf[j] = '\0';
+
+    nl_node->content = buf;
+    nl_node->next = NULL;
+
+    clear_list(lst, nl_node, buf);
 }
 
 void clear_list(t_list **lst, t_list	*nl_node,char	*buf)

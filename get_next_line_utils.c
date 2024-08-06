@@ -152,35 +152,6 @@ char	*get_line(t_list *list)
 	return (next_str);
 }
 
-// void node_with_nl(t_list **lst)
-// {
-// 	t_list *last_node;
-// 	t_list *nl_node;
-// 	char *buf;
-// 	int i;
-// 	int j;
-
-// 	if (!lst || !*lst)
-// 		return;
-// 	last_node = ft_lstlast(*lst);
-
-// 	i = 0;
-// 	while (last_node->content[i] != '\n' && last_node->content[i])
-// 		++i;
-// 	if (!last_node->content[i])
-// 		return;
-// 	buf = malloc(BUFFER_SIZE + 1);
-// 	nl_node = malloc(sizeof(t_list));
-// 	if (!buf || !nl_node)
-// 		return;
-// 	j = 0;
-// 	while (last_node->content[i] && last_node->content[++i])
-// 		buf[j++] = last_node->content[i];
-// 	buf[j] = '\0';
-// 	nl_node->content = buf;
-// 	nl_node->next = NULL;
-// 	clear_list(lst, nl_node, buf);
-// }
 void node_with_nl(t_list **lst)
 {
 	t_list	*last_node;

@@ -11,20 +11,30 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdlib.h>
+#include <stdio.h>
 
-char	*get_line(t_list *list)
+void	clear_list(t_list **lst, t_list	*clean_node, char	*buf)
 {
-	int		str_len;
-	char	*next_str;
+	t_list	*tmp;
 
-	if (NULL == list)
-		return (NULL);
-	str_len = lst_size(list);
-	next_str = malloc(str_len + 1);
-	if (NULL == next_str)
-		return (NULL);
-	copy_str(list, next_str);
-	return (next_str);
+	if (*lst == NULL)
+		return ;
+	while (*lst)
+	{
+		tmp = (*lst)->next;
+		free((*lst)->content);
+		free(*lst);
+		*lst = tmp;
+	}
+	*lst = NULL;
+	if (clean_node->content[0])
+		*lst = clean_node;
+	else
+	{
+		free(buf);
+		free(clean_node);
+	}
 }
 
 void	node_with_nl(t_list **lst)
@@ -50,29 +60,6 @@ void	node_with_nl(t_list **lst)
 	clean_node->content = buf;
 	clean_node->next = NULL;
 	clear_list(lst, clean_node, buf);
-}
-
-void	clear_list(t_list **lst, t_list	*clean_node, char	*buf)
-{
-	t_list	*tmp;
-
-	if (*lst == NULL)
-		return ;
-	while (*lst)
-	{
-		tmp = (*lst)->next;
-		free((*lst)->content);
-		free(*lst);
-		*lst = tmp;
-	}
-	*lst = NULL;
-	if (clean_node->content[0])
-		*lst = clean_node;
-	else
-	{
-		free(buf);
-		free(clean_node);
-	}
 }
 
 void	copy_str(t_list *lst, char *str)
@@ -101,12 +88,26 @@ void	copy_str(t_list *lst, char *str)
 	str[k] = '\0';
 }
 
+char	*get_line(t_list *list)
+{
+	int		str_len;
+	char	*next_str;
+
+	if (NULL == list)
+		return (NULL);
+	str_len = lst_size(list);
+	next_str = malloc(str_len + 1);
+	if (NULL == next_str)
+		return (NULL);
+	copy_str(list, next_str);
+	return (next_str);
+}
+
 char	*get_next_line(int fd)
 {
-	static t_list	*lst;
+	static t_list	*lst = NULL;
 	char			*line;
 
-	lst = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &line, 0) < 0)
 		return (NULL);
 	create_list(&lst, fd);

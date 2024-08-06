@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdlib.h>
 #include <stdio.h>
 
 int	lst_size(t_list *lst)

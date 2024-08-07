@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpazouki <mpazouki@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-07-07 14:18:37 by mpazouki          #+#    #+#             */
-/*   Updated: 2024-07-07 14:18:37 by mpazouki         ###   ########.fr       */
+/*   Created: 2024-08-07 10:26:08 by mpazouki          #+#    #+#             */
+/*   Updated: 2024-08-07 10:26:08 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 10
@@ -33,7 +33,7 @@ typedef struct s_list
 char	*get_next_line(int fd);
 int		lst_size(t_list *lst);
 t_list	*ft_lstlast(t_list *lst);
-void	ft_lstadd_back(t_list **lst, char *new_buf);
+void	ft_lstadd_back(t_list **lst, char *new_buf, int fd);
 int		is_newline(t_list *lst);
 void	create_list(t_list **lst, int fd);
 void	node_with_nl(t_list **lst);

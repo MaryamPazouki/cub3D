@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpazouki <mpazouki@student.42.fr>          #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-07-07 14:31:55 by mpazouki          #+#    #+#             */
-/*   Updated: 2024-07-07 14:31:55 by mpazouki         ###   ########.fr       */
+/*   Created: 2024-08-07 10:26:16 by mpazouki          #+#    #+#             */
+/*   Updated: 2024-08-07 10:26:16 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 #include <stdlib.h>
 #include <stdio.h>
 

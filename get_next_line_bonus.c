@@ -107,13 +107,13 @@ char	*get_next_line(int fd)
 	static t_list	*lst[4096];
 	char			*line;
 
-	if (fd < 0 || fd >= 4095 ||BUFFER_SIZE <= 0 || read(fd, &line, 0) < 0)
+	if (fd < 0 || fd >= 4095 || BUFFER_SIZE <= 0 || read(fd, &line, 0) < 0)
 	{
-		if(fd >= 0 && fd < 4095)
+		if (fd >= 0 && fd < 4095)
 			clear_list(&lst[fd], NULL, NULL);
 		return (NULL);
 	}
-	create_list(&lst, fd);
+	create_list(lst, fd);
 	if (!lst[fd])
 		return (NULL);
 	line = get_line_new(lst[fd]);

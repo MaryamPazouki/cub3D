@@ -51,18 +51,29 @@ char **read_map(const char *filename)
 	return map;
 }
 
-// char	**validate_map(char *map_file)
-// {
-// 	char **map;
+void set_map_dimensions (t_game *game)
+{
+    
+}
 
-// 	if (!map_file)
-// 		return NULL; // print error
-// 	map = read_map(map_file);
-// 	// check if map is valid before returning
-// 	return (map);
-// 	// check extension
-// 	// 
-// }
+
+
+
+char	**validate_map(char *map_file)
+{
+    char **map;
+
+ 	if (!map_file)
+ 		return NULL; // print error
+ 	map = read_map(map_file);
+//  check if map is valid before returning
+ 	return (map);
+
+}
+
+
+
+
 
 // // int get_textures_info_and_colors(char **file_lines, t_game *game)
 // // {

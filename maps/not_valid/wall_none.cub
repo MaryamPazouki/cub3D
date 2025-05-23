@@ -1,0 +1,21 @@
+NO ./textures/walls/n_walls_0.xpm
+SO ./textures/walls/s_walls_0.xpm
+WE ./textures/walls/w_walls_0.xpm
+EA ./textures/walls/e_walls_0.xpm
+
+F 20,20,20
+C 200,200,200
+
+00000
+00000
+00S00
+00000
+00000
+00000
+00000
+00000
+00000
+00000
+00000
+00000
+00000

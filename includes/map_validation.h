@@ -8,10 +8,15 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-// map_validation_utils.c
+
+
+
+
+
+/* // map_validation_utils.c
 void	free_map(char **map);
 
 // map_validation.c
-char	**validate_map(char *map);
+char	**validate_map(char *map); */
 
 #endif

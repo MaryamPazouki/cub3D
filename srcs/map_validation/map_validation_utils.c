@@ -1,6 +1,6 @@
 #include "map_validation.h"
 
-void	free_map(char **map)
+void	ft_free_map(char **map)
 {
 	int i;
 

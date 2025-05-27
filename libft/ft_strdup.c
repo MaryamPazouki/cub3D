@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zkhojazo <zkhojazo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 22:27:43 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/02/18 14:42:18 by zkhojazo         ###   ########.fr       */
+/*   Updated: 2025/05/27 20:46:08 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #include "libft.h" // for ft_strlen
 
-char	*ft_strdup(char *src)
+char	*ft_strdup(const char *src)
 {
 	int		str_len;
 	char	*str_ptr;

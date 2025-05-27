@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_creation.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zkhojazo <zkhojazo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:33:51 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/05/21 11:34:45 by zkhojazo         ###   ########.fr       */
+/*   Updated: 2025/05/27 21:19:45 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,15 @@ typedef struct s_textures_info
 	char	*e_wall_path; // string created in map validation
 	double	floor_color;  // double created in map validation
 	double	ceiling_color; // double created in map validation
+	
+	// NEW flags to detect duplicates
+	int		has_no;
+	int		has_so;
+	int		has_we;
+	int		has_ea;
+	int		has_f;
+	int		has_c;
+	
 	int		width;
 	int		height;
 }	t_textures_info;
@@ -69,6 +78,7 @@ typedef struct s_game
 	void				*img;
 	char				*img_data;
 	char				**map; // final result then pos_x and pos_y can b
+	int 				player_count;
 	int					bpp;
 	int					size_line;
 	int					endian;

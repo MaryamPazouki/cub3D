@@ -6,7 +6,7 @@
 /*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 19:50:36 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/05/27 08:53:48 by mpazouki         ###   ########.fr       */
+/*   Updated: 2025/05/27 20:46:46 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int		ft_tolower(int c);
 //		ft_strings - int returns
 char	*ft_strchr(const char *s, int c);
 // char	*ft_strcpy(char *dest, const char *src);
-char	*ft_strdup(char *src);
+char	*ft_strdup(const char *src);
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strjoin_char(const char *s1, char c);
@@ -53,7 +53,7 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size);
 size_t	ft_strlcpy(char *dst, const char *src, size_t size);
 size_t	ft_strlen(const char *str);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
-int		ft_strcmp(char *s1, char *s2);
+int		ft_strcmp(const char *s1, char *s2);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 // char	*ft_strncpy(char *dest, const char *src, size_t n);
 char	*ft_strnstr(const char *big, const char *little, size_t len);
@@ -78,7 +78,6 @@ void	ft_bzero(void *s, size_t n);
 // memory allocation
 void	*ft_calloc(size_t nmemb, size_t size);
 char	**ft_split(char const *s, char c);
-char	**ft_split_tokens(const char *str, const char *charset);
 
 // print output
 void	ft_putchar_fd(char c, int fd);

@@ -18,4 +18,11 @@ void	ft_free_map(char **map);
 
 int parse_map_file(const char *filepath, t_game *game);
 
+char	**ft_split_tokens(const char *str, const char *charset);
+int has_cub_extension(const char *filename);
+
+
+// valid texture path
+int	validate_texture_paths(t_game *game);
+
 #endif

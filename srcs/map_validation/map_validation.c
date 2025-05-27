@@ -6,11 +6,11 @@
 /*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 21:29:53 by mpazouki          #+#    #+#             */
-/*   Updated: 2025/05/27 21:31:42 by mpazouki         ###   ########.fr       */
+/*   Updated: 2025/05/27 21:50:39 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "main.h"
+#include "main_header.h"
 
 static int is_wall_row(const char *row)
 {
@@ -47,18 +47,18 @@ static int is_valid_neighbor(char **map, int i, int j)
 
 static int ft_map_len(char **map)
 {
-	int len = 0;
+	int len;
+	
+	len = 0;
 	while (map[len])
 		len++;
 	return len;
 }
 
-
-
-
-static int is_map_closed(char **map)
+int is_map_closed(char **map)
 {
-	int i, j;
+	int i; 
+	int j;
 
 	// Check top and bottom row
 	if (!is_wall_row(map[0]) || !is_wall_row(map[ft_map_len(map) - 1]))

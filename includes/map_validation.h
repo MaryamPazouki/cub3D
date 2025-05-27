@@ -25,4 +25,7 @@ int has_cub_extension(const char *filename);
 // valid texture path
 int	validate_texture_paths(t_game *game);
 
+// validate the map
+int is_map_closed(char **map);
+
 #endif

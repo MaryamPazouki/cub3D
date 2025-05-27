@@ -6,7 +6,7 @@
 /*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 19:50:36 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/05/23 23:08:03 by mpazouki         ###   ########.fr       */
+/*   Updated: 2025/05/27 08:53:48 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	ft_bzero(void *s, size_t n);
 // memory allocation
 void	*ft_calloc(size_t nmemb, size_t size);
 char	**ft_split(char const *s, char c);
-char	**ft_split_charset(const char *str, const char *charset);
+char	**ft_split_tokens(const char *str, const char *charset);
 
 // print output
 void	ft_putchar_fd(char c, int fd);

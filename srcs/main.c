@@ -24,7 +24,7 @@ int main(int argc, char **argv)
 	if (initialize_mlx_and_launch_game(&game) == -1)
 	{
 		ft_putstr_fd("Error: Failed to initialize graphics\n", STDERR_FILENO);
-		free_map(game.map);
+		ft_free_map(game.map);
 		return (1);
 	}
 	return (0);

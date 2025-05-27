@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_header.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zkhojazo <zkhojazo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:46:38 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/05/20 15:47:23 by zkhojazo         ###   ########.fr       */
+/*   Updated: 2025/05/27 09:53:57 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,5 +20,8 @@
 
 // print_debugging_fts.c
 void	print_map(char **map);
+int		cast_rays(t_game *game, double dir_angle, double *first_cross_dist);
+
+int		extract_map_info(char *map_file, t_game *game);
 
 #endif

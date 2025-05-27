@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_keys.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zkhojazo <zkhojazo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 13:39:26 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/05/20 13:39:59 by zkhojazo         ###   ########.fr       */
+/*   Updated: 2025/05/27 09:39:34 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	free_game_struct(t_game *game)
 {
 	mlx_destroy_image(game->mlx, game->img);
 	mlx_destroy_window(game->mlx, game->win);
-	free_map(game->map);
+	ft_free_map(game->map);
 	mlx_destroy_image(game->mlx, game->loaded_textures.n_wall);
 	mlx_destroy_image(game->mlx, game->loaded_textures.w_wall);
 	mlx_destroy_image(game->mlx, game->loaded_textures.s_wall);

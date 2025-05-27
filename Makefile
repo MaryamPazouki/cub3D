@@ -21,6 +21,7 @@ MLX_LIBS = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
 SRCS = main.c \
 		print_debugging_fts.c \
 		map_validation/map_validation.c \
+		map_validation/map_parser.c \
 		map_validation/map_validation_utils.c \
 		make_environment/initialize_game_struct.c \
 		make_environment/initialize_mlx.c \

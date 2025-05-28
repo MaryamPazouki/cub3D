@@ -6,81 +6,104 @@
 /*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 21:29:53 by mpazouki          #+#    #+#             */
-/*   Updated: 2025/05/27 21:50:39 by mpazouki         ###   ########.fr       */
+/*   Updated: 2025/05/28 12:14:06 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main_header.h"
 
-static int is_wall_row(const char *row)
+// find_max_row
+int find_max_row_len(char **map)
 {
-	int i = 0;
-	while (row[i])
+	int max;
+	int len;
+	int i;
+
+	i = 0;
+	max = 0;
+	while(map[i])
 	{
-		if (row[i] != '1' && row[i] != ' ')
-			return (0);
+		len = ft_strlen(map[i]);
+		if (len > max)
+			max = len;
 		i++;
 	}
-	return (1);
+	int emptyCounter = 0;
+	return(max);
+	
 }
 
-
-static int is_valid_neighbor(char **map, int i, int j)
+// create padding rows
+char *create_padding_row(int width)
 {
-	// Map bounds
-	if (!map[i] || !map[i][j])
-		return (0);
+	char *padding_row;
+	int i;
 
-	// Check 4 directions
-	if (!map[i - 1] || !map[i + 1])
-		return (0);
-	if ((int)ft_strlen(map[i - 1]) <= j || (int)ft_strlen(map[i + 1]) <= j)
-		return (0);
+	padding_row = (char *)malloc(sizeof(char) * (width + 1));
+	if (!padding_row)
+		return NULL;
 
-	char up = map[i - 1][j];
-	char down = map[i + 1][j];
-	char left = j > 0 ? map[i][j - 1] : ' ';
-	char right = map[i][j + 1];
-
-	return (up != ' ' && down != ' ' && left != ' ' && right != ' ');
+	i = 0;
+	while (i < width)
+	{
+		padding_row[i] = ' ';
+		i++;
+	}
+	padding_row[width] = '\0';
+	return padding_row;
 }
 
-static int ft_map_len(char **map)
+// pad_line -Pad each line to same length with spaces
+
+char *pad_line(char *line, int width)
 {
 	int len;
+	char *padded;
+	int i;
+
+	len = ft_strlen(line);
+	padded = malloc(sizeof (char *) * (width + 3));
+	if (!padded)
+		return(NULL);
 	
-	len = 0;
-	while (map[len])
-		len++;
-	return len;
+	i = 0;
+	while(i < width)
+	{
+		if (i < len)
+			padded[i + 1] = line[i];
+		else
+			padded [i] = ' ';
+		i++;
+	}
+	
+	padded[0] = ' '; // left wall
+	padded[i + 1] = ' '; // right wall
+	padded[i + 2] = '\0';
+	return (padded);
 }
 
-int is_map_closed(char **map)
+
+
+
+
+
+int flood_fill_safe(char **map, int x, int y, int *count)
 {
-	int i; 
-	int j;
+	if (map[y][x] == ' ' || map[y][x] == '\0')
+		return -1; // map is not enclosed
 
-	// Check top and bottom row
-	if (!is_wall_row(map[0]) || !is_wall_row(map[ft_map_len(map) - 1]))
-	{
-		fprintf(stderr, "Error: Map not surrounded by walls (top/bottom).\n");
-		return (0);
-	}
+	if (map[y][x] == '1' || map[y][x] == 'x')
+		return 0; // wall or already visited
 
-	for (i = 1; map[i + 1]; i++) // skip first and last line
-	{
-		for (j = 0; map[i][j]; j++)
-		{
-			char c = map[i][j];
-			if (c == '0' || c == 'N' || c == 'S' || c == 'E' || c == 'W')
-			{
-				if (!is_valid_neighbor(map, i, j))
-				{
-					fprintf(stderr, "Error: Map is not closed at (%d, %d).\n", i, j);
-					return (0);
-				}
-			}
-		}
-	}
-	return (1);
+	if (map[y][x] == '0')
+		(*count)++;
+
+	map[y][x] = 'x'; // mark visited
+
+	if (flood_fill_safe(map, x + 1, y, count) == -1) return -1;
+	if (flood_fill_safe(map, x - 1, y, count) == -1) return -1;
+	if (flood_fill_safe(map, x, y + 1, count) == -1) return -1;
+	if (flood_fill_safe(map, x, y - 1, count) == -1) return -1;
+
+	return 0;
 }

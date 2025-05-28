@@ -6,7 +6,7 @@
 /*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 23:36:48 by mpazouki          #+#    #+#             */
-/*   Updated: 2025/05/27 21:40:46 by mpazouki         ###   ########.fr       */
+/*   Updated: 2025/05/28 08:19:57 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -383,11 +383,16 @@ int extract_map_info(char *map_file, t_game *game)
         return -1; */
     if (!has_valid_characters(game->map))
         return -1;
-	if (!is_map_closed(game->map))
-    {  
-	   ft_putstr_fd("Error: Map is not closed by walls\n", 2);
-	   return (-1);
-    }    
+	if (!validate_map_closed(game, map_height))
+	{
+		ft_putstr_fd("Error: Map is not closed by walls\n", STDERR_FILENO);
+		return (-1);
+	}
+	if (!validate_all_zeros_reachable(game, map_height))
+	{
+		ft_putstr_fd("Error: Not all 0s are reachable from player\n", STDERR_FILENO);
+		return (-1);
+	}	
     if (!set_player_position(game))
         return -1;
     set_map_dimensions(game);

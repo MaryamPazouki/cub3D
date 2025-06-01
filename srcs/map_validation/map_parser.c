@@ -170,7 +170,6 @@ static int check_all_directives_present(t_textures_info *t)
 //handle texture and validate
 static int handle_texture_directive(t_game *game, const char *key, const char *path)
 {
-	
 	if (!ft_strcmp(key, "NO"))
 		return set_texture_path(&game->textures_info.n_wall_path, &game->textures_info.has_no, path, "NO");
 	else if (!ft_strcmp(key, "SO"))
@@ -187,12 +186,12 @@ static int handle_color_directive(t_game *game, const char *key, const char *val
 {
 	if (!ft_strcmp(key, "F"))
 	{
-		return parse_color(value, 
+		return parse_color(value,
 				&game->textures_info.floor_color, &game->textures_info.has_f, "F");
 	}
 	if (!ft_strcmp(key, "C"))
 	{
-		return parse_color(value, 
+		return parse_color(value,
 				&game->textures_info.ceiling_color, &game->textures_info.has_c, "C");
 	}
 	fprintf(stderr, "Error: Unknown color key: %s\n", key);
@@ -212,18 +211,18 @@ int parse_directive(t_game *game, char *line)
 		ft_free_map(tokens);
 		return (0);
 	}
-	if (!ft_strcmp(tokens[0], "NO") || !ft_strcmp(tokens[0], "SO") || 
+	if (!ft_strcmp(tokens[0], "NO") || !ft_strcmp(tokens[0], "SO") ||
 		!ft_strcmp(tokens[0], "WE") || !ft_strcmp(tokens[0], "EA"))
 	{
 		if (handle_texture_directive(game, tokens[0], tokens[1]))
 		{;}
 	}
 	else if (!ft_strcmp(tokens[0], "F") || !ft_strcmp(tokens[0], "C"))
-	{	
+	{
 		if (handle_color_directive(game, tokens[0], tokens[1]))
 		{;}
 	}
-	else 
+	else
  		fprintf(stderr, "Error: Unknown directive: %s\n", tokens[0]);
 	ft_free_map(tokens);
 	return (1);
@@ -261,7 +260,7 @@ static int has_cub_extension(const char *filename)
 	len = ft_strlen(filename);
 	if (len < 4)
 		return(0);
-	return(ft_strncmp(filename + (len - 4 ), ".cub", 4) == 0);	
+	return(ft_strncmp(filename + (len - 4 ), ".cub", 4) == 0);
 }
 
 static void count_player_in_line(t_game *game, const char *line)
@@ -280,7 +279,7 @@ static void	append_map_line(t_game *game, char *line)
 {
 	char	**new_map;
 	int		i;
-	
+
 	count_player_in_line(game, line);
 	i = 0;
 	if (game->map)
@@ -356,7 +355,7 @@ static int	handle_map_line(t_game *game, char *line)
 	append_map_line(game, line);
 	return (1);
 }
- 
+
 
 /* static void print_missing_directives(t_textures_info *tex)
 {
@@ -454,7 +453,7 @@ static int	read_map_file(t_game *game, int fd)
 static int parse_map_file(const char *filepath, t_game *game)
 {
 	int fd;
-	
+
 	if (!has_cub_extension(filepath))
 	{
 		fprintf(stderr, "Error: Map file must have a .cub extension\n");
@@ -482,7 +481,7 @@ static int parse_map_file(const char *filepath, t_game *game)
 int extract_map_info(char *map_file, t_game *game)
 {
 	if (!parse_map_file(map_file, game))
-		return(0); 
+		return(0);
 	//	validate_map(game, game -> map);
 	return 1;
 }

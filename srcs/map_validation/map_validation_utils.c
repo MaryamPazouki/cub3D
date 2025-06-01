@@ -15,6 +15,20 @@ void	ft_free_map(char **map)
 	free(map);
 }
 
+/* int error_and_return(const char *msg, int code)
+{
+	fprintf(stderr, "\033[31mError: %s\033[0m\n", msg);
+	return code;
+} */
+
+
+int encode_rgb(int r, int g, int b)
+{
+    return (r << 16) | (g << 8) | b;
+}
+
+
+
 
 
 

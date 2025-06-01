@@ -6,7 +6,7 @@
 /*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:46:38 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/05/27 20:20:16 by mpazouki         ###   ########.fr       */
+/*   Updated: 2025/05/29 11:13:06 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 void	print_map(char **map);
 int		cast_rays(t_game *game, double dir_angle, double *first_cross_dist);
 
-//int		extract_map_info(char *map_file, t_game *game);
+int		extract_map_info(char *map_file, t_game *game);
+
+
 
 #endif

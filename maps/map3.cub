@@ -1,13 +1,13 @@
-								  NO textures/north.xpm
+				NO								  textures/north_wall.xpm 			
 
 
-						SO 						textures/south.xpm
+						SO 						textures/mossy.xpm				
 
 
-	WE  	 	textures/west.xpm
+	WE  	 	textures/greystone.xpm					
 
 
-EA textures/east.xpm
+EA textures/colorstone.xpm       
 
       F   									2,155,2
    		C         	    		12,1,123   				     

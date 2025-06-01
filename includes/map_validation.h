@@ -11,21 +11,24 @@
 
 // map_validation_utils.c
 void	ft_free_map(char **map);
-
-// map_validation.c
-//char	**validate_map(char *map);
+int encode_rgb(int r, int g, int b);
 
 
-int parse_map_file(const char *filepath, t_game *game);
+
+/* int parse_map_file(const char *filepath, t_game *game);
+
+
+int has_cub_extension(const char *filename); */
 
 char	**ft_split_tokens(const char *str, const char *charset);
-int has_cub_extension(const char *filename);
+int extract_map_info(char *map_file, t_game *game);
 
 
 // valid texture path
-int	validate_texture_paths(t_game *game);
+//int	validate_texture_paths(t_game *game);
 
-// validate the map
-int is_map_closed(char **map);
+
+// map_validation
+int     validate_map(t_game *game, char **original_map);
 
 #endif

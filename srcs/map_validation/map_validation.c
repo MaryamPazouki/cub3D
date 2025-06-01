@@ -6,88 +6,112 @@
 /*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 21:29:53 by mpazouki          #+#    #+#             */
-/*   Updated: 2025/05/28 12:14:06 by mpazouki         ###   ########.fr       */
+/*   Updated: 2025/05/29 11:21:48 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main_header.h"
 
-// find_max_row
-int find_max_row_len(char **map)
+static int map_height(char **map)
+{
+	int i;
+	
+	if (!map)
+		return(0);
+	i = 0;
+	while (map[i])
+		i++;
+	return i;
+}
+
+static int map_max_width(char **map)
 {
 	int max;
-	int len;
 	int i;
-
-	i = 0;
+	
+	if (!map)
+		return(0);
 	max = 0;
-	while(map[i])
+	i = 0;
+	while (map[i])
 	{
-		len = ft_strlen(map[i]);
+		int len = ft_strlen(map[i]);
 		if (len > max)
 			max = len;
 		i++;
 	}
-	int emptyCounter = 0;
-	return(max);
-	
+	return max;
 }
 
 // create padding rows
-char *create_padding_row(int width)
+static char *create_padding_row(int width)
 {
 	char *padding_row;
 	int i;
-
-	padding_row = (char *)malloc(sizeof(char) * (width + 1));
+	
+	padding_row = malloc(sizeof(char) * (width + 3));
 	if (!padding_row)
-		return NULL;
-
+		return(NULL);
 	i = 0;
-	while (i < width)
+	while(i < width + 2)
 	{
 		padding_row[i] = ' ';
 		i++;
 	}
-	padding_row[width] = '\0';
-	return padding_row;
+	padding_row[width + 2] = '\0';
+	return(padding_row);		
 }
 
-// pad_line -Pad each line to same length with spaces
-
-char *pad_line(char *line, int width)
+// pad the lines with spaces to readjust all lines into same size
+static char *pad_line_with_walls(const char *line, int target_width)
 {
 	int len;
-	char *padded;
+	char *padded_line;
 	int i;
 
 	len = ft_strlen(line);
-	padded = malloc(sizeof (char *) * (width + 3));
-	if (!padded)
+	padded_line = malloc(sizeof(char) * (target_width + 3));
+	if (!padded_line)
 		return(NULL);
-	
+	padded_line[0] = ' ';
 	i = 0;
-	while(i < width)
+	while(i < target_width)
 	{
 		if (i < len)
-			padded[i + 1] = line[i];
-		else
-			padded [i] = ' ';
+			padded_line[i + 1] = line[i];
+		else 
+			padded_line[i + 1] = ' ';
 		i++;
 	}
-	
-	padded[0] = ' '; // left wall
-	padded[i + 1] = ' '; // right wall
-	padded[i + 2] = '\0';
-	return (padded);
+	padded_line[target_width + 1] = ' ';
+	padded_line[target_width + 2] = '\0';
+	return padded_line;
+}
+
+// finall version of normalized map
+static char **normalized_map(char **map, int height, int width)
+{
+	char **normalized;
+	int i;
+
+	normalized = malloc(sizeof(char *) * (height + 3) );
+	if (!normalized)
+		return(NULL);
+	normalized[0] = create_padding_row(width);
+	i = 0;
+	while(i < height)
+	{
+		normalized[i + 1] = pad_line_with_walls(map[i], width);
+		i++;
+	}
+	normalized[height + 1] = create_padding_row(width);
+	normalized[height + 2] = NULL;
+	return normalized;
 }
 
 
-
-
-
-
-int flood_fill_safe(char **map, int x, int y, int *count)
+//  functio to check the map is surrounded with 1 and all area is reachebale
+static int flood_fill_safe(char **map, int x, int y, int *count)
 {
 	if (map[y][x] == ' ' || map[y][x] == '\0')
 		return -1; // map is not enclosed
@@ -99,7 +123,6 @@ int flood_fill_safe(char **map, int x, int y, int *count)
 		(*count)++;
 
 	map[y][x] = 'x'; // mark visited
-
 	if (flood_fill_safe(map, x + 1, y, count) == -1) return -1;
 	if (flood_fill_safe(map, x - 1, y, count) == -1) return -1;
 	if (flood_fill_safe(map, x, y + 1, count) == -1) return -1;
@@ -107,3 +130,77 @@ int flood_fill_safe(char **map, int x, int y, int *count)
 
 	return 0;
 }
+
+// check if the map is closed
+static int is_map_closed(char **map, int width, int height)
+{
+	int count;
+	
+	count = 0;
+	if (flood_fill_safe(map, width, height , &count) == -1)
+		return(0);
+	return(1);
+}
+
+
+// find palayer position and check the number of player exist in map
+static int find_player_position(char **map, double *pos_x, double *pos_y)
+{
+	int y = 0;
+	int x;
+	int count = 0;
+
+	while (map[y])
+	{
+		x = 0;
+		while (map[y][x])
+		{
+			if (map[y][x] == 'N' || map[y][x] == 'S' ||
+				map[y][x] == 'E' || map[y][x] == 'W')
+			{
+				count++;
+				if (count > 1)
+					return (0); // more than one player found
+				*pos_x = x;
+				*pos_y = y;
+			}
+			x++;
+		}
+		y++;
+	}
+	return (count == 1); // must be exactly one player
+}
+
+
+
+// main function to validate the map
+
+int validate_map(t_game *game, char **original_map)
+{
+	int height;
+	int width;
+	char **normalized;
+	
+	height = map_height(original_map);
+	width = map_max_width(original_map);
+	if (!find_player_position(original_map, &game->pos_x, &game->pos_y))
+	{
+		ft_putstr_fd("Error: Invalid or multiple player positions\n", STDERR_FILENO);
+		ft_free_map(original_map);
+		return (0);
+	}	
+	normalized = normalized_map(original_map, height, width);
+	if (!normalized)
+		return (0);
+	if (!is_map_closed(normalized, width, height ))
+	{
+		ft_putstr_fd("Error: Map is not surrounded by walls\n", STDERR_FILENO);
+		ft_free_map(normalized);
+		return (0);
+	}
+	/* game -> map_height = map_height(normalized_map);
+	game -> map_width = map_max_width(normalized_map); */
+	ft_free_map(normalized);
+	return (1);
+}
+

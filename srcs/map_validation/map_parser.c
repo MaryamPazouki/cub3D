@@ -6,7 +6,7 @@
 /*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 23:36:48 by mpazouki          #+#    #+#             */
-/*   Updated: 2025/06/01 00:32:12 by mpazouki         ###   ########.fr       */
+/*   Updated: 2025/06/01 21:06:40 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -445,6 +445,7 @@ static int	read_map_file(t_game *game, int fd)
 	}
 	return (0);
 }
+
 
 
 

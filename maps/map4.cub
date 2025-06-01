@@ -1,5 +1,8 @@
 
-
+111111111
+10W101101
+100000001
+111111111
 
 NO textures/north_wall.xpm
 SO textures/mossy.xpm
@@ -8,14 +11,13 @@ EA textures/colorstone.xpm
 
 
 
+
 C 12,1,123
 F 2,155,2
 
 
-111111111
-10W101101
-100000001
-111111111
+
+
 
 
 

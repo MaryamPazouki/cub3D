@@ -6,7 +6,7 @@
 /*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:33:51 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/05/31 22:26:12 by mpazouki         ###   ########.fr       */
+/*   Updated: 2025/06/01 23:22:16 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,8 +96,8 @@ typedef struct s_game
 	int					map_cols;
 	int					map_width; // int created in map validation
 	int					map_height;// int created in map validation
-	double				pos_x; // double created in map validation (optional)
-	double				pos_y; // double created in map validation (optional)
+	int				pos_x; // double created in map validation (optional)
+	int				pos_y; // double created in map validation (optional)
 	double				dir_angle;
 	double				dir_x;
 	double				dir_y;

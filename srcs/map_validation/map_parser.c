@@ -6,39 +6,28 @@
 /*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 23:36:48 by mpazouki          #+#    #+#             */
-/*   Updated: 2025/06/01 21:06:40 by mpazouki         ###   ########.fr       */
+/*   Updated: 2025/06/01 22:43:34 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main_header.h"
-
 //------------------parse and validate directive ---------------------
 
 // check the valide keywords for directive
 static int is_directive(char *line)
-{	
+{
 	while (*line && ft_isspace(*line))
 		line++;
+	if (!line[0] || !line[1] || !line[2])
+		return (0);
 	return((ft_strncmp(line, "NO", 2) == 0 && ft_isspace(line[2]))
 		|| (ft_strncmp(line, "SO", 2) == 0 && ft_isspace(line[2]))
 		|| (ft_strncmp(line, "WE", 2) == 0 && ft_isspace(line[2]))
 		|| (ft_strncmp(line, "EA", 2) == 0 && ft_isspace(line[2]))
-		|| (line[0] == 'F' && ft_isspace(line[1])) 
+		|| (line[0] == 'F' && ft_isspace(line[1]))
 		|| (line[0] == 'C' && ft_isspace(line[1]))
 	);
 }
-
-// Check if all required directives (NO, SO, EA, WE, F, C) are present.
-/* static int	validate_directives(t_game *game)
-{
-	if (!game->textures_info.n_wall_path || !game->textures_info.s_wall_path ||
-		!game->textures_info.e_wall_path || !game->textures_info.w_wall_path)
-		return (fprintf(stderr, "Error: Missing texture paths\n"), 0);
-	if (game->textures_info.floor_color < 0 || game->textures_info.ceiling_color < 0)
-		return (fprintf(stderr, "Error: Missing or invalid colors\n"), 0);
-	return (1);
-} */
-
 
 // ---------------------validate color -------------------------------
 static int	is_valid_color_range(int n)
@@ -80,8 +69,6 @@ static int parse_color(const char *value, double *color_field, int *flag, const 
 		fprintf(stderr, "Error: Duplicate %s directive\n", label);
 		return (0);
 	}
-
-	// Split color values by commas and whitespace
 	raw_color = ft_split_tokens(value, ", \t");
 	if (!raw_color || !raw_color[0] || !raw_color[1] || !raw_color[2] || raw_color[3])
 	{
@@ -92,17 +79,14 @@ static int parse_color(const char *value, double *color_field, int *flag, const 
 	if (!ft_validate_color(raw_color))
 	{
 		fprintf(stderr, "Error: %s color values must be in range [0–255]\n", label);
-		//ft_free_map(raw_color);
 		return (0);
 	}
-
-	// Encode RGB into single int stored as double
 	*color_field = encode_rgb(
-					ft_atoi(raw_color[0]), 
-					ft_atoi(raw_color[1]), 
+					ft_atoi(raw_color[0]),
+					ft_atoi(raw_color[1]),
 					ft_atoi(raw_color[2]));
 	ft_free_map(raw_color);
-	return (1);		
+	return (1);
 }
 
 
@@ -117,7 +101,7 @@ static int	is_valid_texture_path(const char *path)
 	// Check file extension (.xpm required by MiniLibX)
 	int len = ft_strlen(path);
 	if (len < 4 || ft_strncmp(path + len - 4, ".xpm", 4) != 0)
-	{   
+	{
 		fprintf(stderr, "\033[31mError: Invalid texture extension for '%s'. Must be .xpm\033[0m\n", path);
 		return (0);
 	}
@@ -126,7 +110,7 @@ static int	is_valid_texture_path(const char *path)
 	fd = open(path, O_RDONLY);
 	if (fd < 0)
 	{
-		fprintf(stderr, "\033[31mError: Invalid texture path for '%s': \033[0m\n", path);
+		fprintf(stderr, "\033[31mError: Invalid texture path for '%s'\033[0m\n", path);
 		return(0);
 	}
 	close(fd);
@@ -142,6 +126,8 @@ static int set_texture_path(char **dest, int *flag, const char *path, const char
 	}
 	if (!is_valid_texture_path(path))
 		return (1);
+	if (*dest)
+		free(*dest);
 	*dest = ft_strdup(path);
 	if (!*dest)
 	{
@@ -170,7 +156,7 @@ static int check_all_directives_present(t_textures_info *t)
 //handle texture and validate
 static int handle_texture_directive(t_game *game, const char *key, const char *path)
 {
-	
+
 	if (!ft_strcmp(key, "NO"))
 		return set_texture_path(&game->textures_info.n_wall_path, &game->textures_info.has_no, path, "NO");
 	else if (!ft_strcmp(key, "SO"))
@@ -187,12 +173,12 @@ static int handle_color_directive(t_game *game, const char *key, const char *val
 {
 	if (!ft_strcmp(key, "F"))
 	{
-		return parse_color(value, 
+		return parse_color(value,
 				&game->textures_info.floor_color, &game->textures_info.has_f, "F");
 	}
 	if (!ft_strcmp(key, "C"))
 	{
-		return parse_color(value, 
+		return parse_color(value,
 				&game->textures_info.ceiling_color, &game->textures_info.has_c, "C");
 	}
 	fprintf(stderr, "Error: Unknown color key: %s\n", key);
@@ -212,46 +198,35 @@ int parse_directive(t_game *game, char *line)
 		ft_free_map(tokens);
 		return (0);
 	}
-	if (!ft_strcmp(tokens[0], "NO") || !ft_strcmp(tokens[0], "SO") || 
+	if (!ft_strcmp(tokens[0], "NO") || !ft_strcmp(tokens[0], "SO") ||
 		!ft_strcmp(tokens[0], "WE") || !ft_strcmp(tokens[0], "EA"))
 	{
 		if (handle_texture_directive(game, tokens[0], tokens[1]))
-		{;}
+		{
+			ft_free_map(tokens);
+			return (0);
+		}
 	}
 	else if (!ft_strcmp(tokens[0], "F") || !ft_strcmp(tokens[0], "C"))
-	{	
+	{
 		if (handle_color_directive(game, tokens[0], tokens[1]))
-		{;}
+		{
+			ft_free_map(tokens);
+			return (0);
+		}
 	}
-	else 
- 		fprintf(stderr, "Error: Unknown directive: %s\n", tokens[0]);
+	else
+	{
+		fprintf(stderr, "Error: Unknown directive: %s\n", tokens[0]);
+		ft_free_map(tokens);
+		return (0);
+	}
 	ft_free_map(tokens);
 	return (1);
 }
 
 
 //------------------------Extracting Map-------------------------
-
-/* static int has_valid_characters(  char *line, int *player_count)
-{
-	int i = 0;
-
-	while (line[i])
-	{
-		if (line[i] == 'N' || line[i] == 'S' || line[i] == 'E' || line[i] == 'W')
-			(*player_count)++;
-		else if (line[i] != ' ' && line[i] != '0' && line[i] != '1')
-			return (0); // invalid character
-		i++;
-	}
-	return (1);
-} */
-
-
-
-
-
-
 
 // check map extension
 static int has_cub_extension(const char *filename)
@@ -261,7 +236,7 @@ static int has_cub_extension(const char *filename)
 	len = ft_strlen(filename);
 	if (len < 4)
 		return(0);
-	return(ft_strncmp(filename + (len - 4 ), ".cub", 4) == 0);	
+	return(ft_strncmp(filename + (len - 4 ), ".cub", 4) == 0);
 }
 
 static void count_player_in_line(t_game *game, const char *line)
@@ -269,7 +244,14 @@ static void count_player_in_line(t_game *game, const char *line)
 	while (*line)
 	{
 		if (*line == 'N' || *line == 'S' || *line == 'E' || *line == 'W')
+		{
 			game->player_count++;
+			/* if (game->player_count > 1)
+			{
+				fprintf(stderr, "\033[31mError: Multiple player positions found\033[0m\n");
+				exit(1);
+			} */
+		}
 		line++;
 	}
 }
@@ -280,7 +262,7 @@ static void	append_map_line(t_game *game, char *line)
 {
 	char	**new_map;
 	int		i;
-	
+
 	count_player_in_line(game, line);
 	i = 0;
 	if (game->map)
@@ -329,19 +311,9 @@ static int is_map_line(const char *line)
 	return 1;
 }
 
-/*  static int	is_empty_line(char *line)
-{
-	while (*line)
-	{
-		if (!ft_isspace(*line))
-			return (0);
-		line++;
-	}
-	return (1);
-} */
 
 static int	handle_directive_line(t_game *game, char *line, int *directive_count)
-{
+ {
 	if (!is_directive(line))
 		return (0);
 	parse_directive(game, line);
@@ -356,17 +328,7 @@ static int	handle_map_line(t_game *game, char *line)
 	append_map_line(game, line);
 	return (1);
 }
- 
 
-/* static void print_missing_directives(t_textures_info *tex)
-{
-	if (!tex->has_no) fprintf(stderr, "Missing NO directive\n");
-	if (!tex->has_so) fprintf(stderr, "Missing SO directive\n");
-	if (!tex->has_we) fprintf(stderr, "Missing WE directive\n");
-	if (!tex->has_ea) fprintf(stderr, "Missing EA directive\n");
-	if (!tex->has_f) fprintf(stderr, "Missing F directive\n");
-	if (!tex->has_c) fprintf(stderr, "Missing C directive\n");
-} */
 
 static int	read_map_file(t_game *game, int fd)
 {
@@ -407,7 +369,7 @@ static int	read_map_file(t_game *game, int fd)
 					return (-1);
 				}
 				map_started = 1;
-				append_map_line(game, trimmed);
+				//append_map_line(game, trimmed);
 				free(trimmed);
 				continue;
 			}
@@ -430,7 +392,7 @@ static int	read_map_file(t_game *game, int fd)
 				free(trimmed);
 				return (-1);
 			}
-			append_map_line(game, trimmed);
+			//append_map_line(game, trimmed);
 			free(trimmed);
 		}
 	}
@@ -446,6 +408,7 @@ static int	read_map_file(t_game *game, int fd)
 	}
 	return (0);
 }
+
 
 
 
@@ -484,6 +447,6 @@ int extract_map_info(char *map_file, t_game *game)
 {
 	if (!parse_map_file(map_file, game))
 		return(0); 
-	//	validate_map(game, game -> map);
+	validate_map(game, game -> map);
 	return 1;
 }

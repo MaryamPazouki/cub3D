@@ -6,7 +6,7 @@
 /*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 21:29:53 by mpazouki          #+#    #+#             */
-/*   Updated: 2025/05/29 11:21:48 by mpazouki         ###   ########.fr       */
+/*   Updated: 2025/06/01 23:39:52 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,19 +132,44 @@ static int flood_fill_safe(char **map, int x, int y, int *count)
 }
 
 // check if the map is closed
-static int is_map_closed(char **map, int width, int height)
+/* static int is_map_closed(char **map, t_game *game)
 {
 	int count;
 	
 	count = 0;
-	if (flood_fill_safe(map, width, height , &count) == -1)
+	if (flood_fill_safe(map, game->pos_x, game->pos_y , &count) == -1)
 		return(0);
 	return(1);
+} */
+static int has_open_on_border(char **map)
+{
+    int i, len, height;
+
+    height = map_height(map);
+    if (height == 0)
+        return 1;
+
+    // Check first and last row
+    for (i = 0; map[0][i]; i++)
+        if (map[0][i] == '0' || map[0][i] == 'N' || map[0][i] == 'S' || map[0][i] == 'E' || map[0][i] == 'W')
+            return 1;
+    for (i = 0; map[height-1][i]; i++)
+        if (map[height-1][i] == '0' || map[height-1][i] == 'N' || map[height-1][i] == 'S' || map[height-1][i] == 'E' || map[height-1][i] == 'W')
+            return 1;
+
+    // Check first and last column of each row
+    for (i = 0; i < height; i++) {
+        len = ft_strlen(map[i]);
+        if (map[i][0] == '0' || map[i][0] == 'N' || map[i][0] == 'S' || map[i][0] == 'E' || map[i][0] == 'W')
+            return 1;
+        if (map[i][len-1] == '0' || map[i][len-1] == 'N' || map[i][len-1] == 'S' || map[i][len-1] == 'E' || map[i][len-1] == 'W')
+            return 1;
+    }
+    return 0;
 }
 
-
 // find palayer position and check the number of player exist in map
-static int find_player_position(char **map, double *pos_x, double *pos_y)
+static int find_player_position(char **map, int *pos_x, int *pos_y)
 {
 	int y = 0;
 	int x;
@@ -180,7 +205,8 @@ int validate_map(t_game *game, char **original_map)
 	int height;
 	int width;
 	char **normalized;
-	
+	int start_x, start_y;
+
 	height = map_height(original_map);
 	width = map_max_width(original_map);
 	if (!find_player_position(original_map, &game->pos_x, &game->pos_y))
@@ -188,19 +214,33 @@ int validate_map(t_game *game, char **original_map)
 		ft_putstr_fd("Error: Invalid or multiple player positions\n", STDERR_FILENO);
 		ft_free_map(original_map);
 		return (0);
-	}	
+	}
+	
+	if (has_open_on_border(original_map)) {
+    ft_putstr_fd("Error: Map has open space or player on border\n", STDERR_FILENO);
+    ft_free_map(original_map);
+    return 0;
+}
 	normalized = normalized_map(original_map, height, width);
 	if (!normalized)
+	{
+		ft_putstr_fd("Error: Memory allocation failed\n", STDERR_FILENO);
+		ft_free_map(original_map);
 		return (0);
-	if (!is_map_closed(normalized, width, height ))
+	}
+
+	start_x = game->pos_x + 1;
+	start_y = game->pos_y + 1;
+	if (flood_fill_safe(normalized, start_x, start_y, &(int){0}) == -1)
 	{
 		ft_putstr_fd("Error: Map is not surrounded by walls\n", STDERR_FILENO);
 		ft_free_map(normalized);
+		ft_free_map(original_map);
 		return (0);
 	}
-	/* game -> map_height = map_height(normalized_map);
-	game -> map_width = map_max_width(normalized_map); */
+
 	ft_free_map(normalized);
 	return (1);
 }
+
 

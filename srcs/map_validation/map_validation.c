@@ -6,7 +6,7 @@
 /*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 21:29:53 by mpazouki          #+#    #+#             */
-/*   Updated: 2025/06/01 23:39:52 by mpazouki         ###   ########.fr       */
+/*   Updated: 2025/06/02 12:03:31 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,9 @@
 
 static int map_height(char **map)
 {
-	int i;
-	
+	int i = 0;
 	if (!map)
-		return(0);
-	i = 0;
+		return 0;
 	while (map[i])
 		i++;
 	return i;
@@ -26,13 +24,10 @@ static int map_height(char **map)
 
 static int map_max_width(char **map)
 {
-	int max;
-	int i;
-	
+	int max = 0;
+	int i = 0;
 	if (!map)
-		return(0);
-	max = 0;
-	i = 0;
+		return 0;
 	while (map[i])
 	{
 		int len = ft_strlen(map[i]);
@@ -42,138 +37,117 @@ static int map_max_width(char **map)
 	}
 	return max;
 }
-
-// create padding rows
+//--------------------pad the map with spaces----------------------------
 static char *create_padding_row(int width)
 {
-	char *padding_row;
-	int i;
-	
-	padding_row = malloc(sizeof(char) * (width + 3));
+	char *padding_row = malloc(sizeof(char) * (width + 3));
 	if (!padding_row)
-		return(NULL);
-	i = 0;
-	while(i < width + 2)
-	{
-		padding_row[i] = ' ';
-		i++;
-	}
+		return NULL;
+	for (int i = 0; i < width + 2; i++)
+		padding_row[i] = '6';
 	padding_row[width + 2] = '\0';
-	return(padding_row);		
+	return padding_row;
 }
 
-// pad the lines with spaces to readjust all lines into same size
 static char *pad_line_with_walls(const char *line, int target_width)
 {
-	int len;
-	char *padded_line;
-	int i;
-
-	len = ft_strlen(line);
-	padded_line = malloc(sizeof(char) * (target_width + 3));
+	int len = ft_strlen(line);
+	char *padded_line = malloc(sizeof(char) * (target_width + 3));
 	if (!padded_line)
-		return(NULL);
-	padded_line[0] = ' ';
-	i = 0;
-	while(i < target_width)
+		return NULL;
+	padded_line[0] = '6';
+	for (int i = 0; i < target_width; i++)
 	{
 		if (i < len)
-			padded_line[i + 1] = line[i];
-		else 
-			padded_line[i + 1] = ' ';
-		i++;
+		{
+			if (line[i] == ' ' || line[i] == '\t') // If character is a space or tab
+				padded_line[i + 1] = '1'; // Treat it as a wall
+			else
+				padded_line[i + 1] = line[i];
+		}
+		else
+			padded_line[i + 1] = '6'; // Pad with '6'
 	}
-	padded_line[target_width + 1] = ' ';
+	padded_line[target_width + 1] = '6';
 	padded_line[target_width + 2] = '\0';
 	return padded_line;
 }
 
-// finall version of normalized map
 static char **normalized_map(char **map, int height, int width)
 {
-	char **normalized;
-	int i;
-
-	normalized = malloc(sizeof(char *) * (height + 3) );
+	char **normalized = malloc(sizeof(char *) * (height + 3));
 	if (!normalized)
-		return(NULL);
+		return NULL;
+
 	normalized[0] = create_padding_row(width);
-	i = 0;
-	while(i < height)
-	{
+	for (int i = 0; i < height; i++)
 		normalized[i + 1] = pad_line_with_walls(map[i], width);
-		i++;
-	}
 	normalized[height + 1] = create_padding_row(width);
 	normalized[height + 2] = NULL;
 	return normalized;
 }
 
 
-//  functio to check the map is surrounded with 1 and all area is reachebale
-static int flood_fill_safe(char **map, int x, int y, int *count)
+// -----------------------zero reachable---------------
+static int count_total_zeroes(char **map)
 {
-	if (map[y][x] == ' ' || map[y][x] == '\0')
-		return -1; // map is not enclosed
+	int y = 0, x, count = 0;
 
+	while (map[y])
+	{
+		x = 0;
+		while (map[y][x])
+		{
+			if (map[y][x] == '0')
+				count++;
+			x++;
+		}
+		y++;
+	}
+	return count;
+}
+
+static int flood_fill_safe(char **map, int x, int y, int *visited_count)
+{
+	if (map[y][x] == '6' || map[y][x] == '\0')
+		return -1;
 	if (map[y][x] == '1' || map[y][x] == 'x')
-		return 0; // wall or already visited
-
+		return 0;
 	if (map[y][x] == '0')
-		(*count)++;
+		(*visited_count)++;
 
-	map[y][x] = 'x'; // mark visited
-	if (flood_fill_safe(map, x + 1, y, count) == -1) return -1;
-	if (flood_fill_safe(map, x - 1, y, count) == -1) return -1;
-	if (flood_fill_safe(map, x, y + 1, count) == -1) return -1;
-	if (flood_fill_safe(map, x, y - 1, count) == -1) return -1;
+	map[y][x] = 'x';
+	if (flood_fill_safe(map, x + 1, y, visited_count) == -1) return -1;
+	if (flood_fill_safe(map, x - 1, y, visited_count) == -1) return -1;
+	if (flood_fill_safe(map, x, y + 1, visited_count) == -1) return -1;
+	if (flood_fill_safe(map, x, y - 1, visited_count) == -1) return -1;
 
 	return 0;
 }
 
-// check if the map is closed
-/* static int is_map_closed(char **map, t_game *game)
+static int validate_map_enclosure_and_reachability(char **normalized_map, int start_x, int start_y)
 {
-	int count;
-	
-	count = 0;
-	if (flood_fill_safe(map, game->pos_x, game->pos_y , &count) == -1)
-		return(0);
-	return(1);
-} */
-static int has_open_on_border(char **map)
-{
-    int i, len, height;
+	int total_zeroes = count_total_zeroes(normalized_map);
+	int visited_zeroes = 0;
 
-    height = map_height(map);
-    if (height == 0)
-        return 1;
-
-    // Check first and last row
-    for (i = 0; map[0][i]; i++)
-        if (map[0][i] == '0' || map[0][i] == 'N' || map[0][i] == 'S' || map[0][i] == 'E' || map[0][i] == 'W')
-            return 1;
-    for (i = 0; map[height-1][i]; i++)
-        if (map[height-1][i] == '0' || map[height-1][i] == 'N' || map[height-1][i] == 'S' || map[height-1][i] == 'E' || map[height-1][i] == 'W')
-            return 1;
-
-    // Check first and last column of each row
-    for (i = 0; i < height; i++) {
-        len = ft_strlen(map[i]);
-        if (map[i][0] == '0' || map[i][0] == 'N' || map[i][0] == 'S' || map[i][0] == 'E' || map[i][0] == 'W')
-            return 1;
-        if (map[i][len-1] == '0' || map[i][len-1] == 'N' || map[i][len-1] == 'S' || map[i][len-1] == 'E' || map[i][len-1] == 'W')
-            return 1;
-    }
-    return 0;
+	if (flood_fill_safe(normalized_map, start_x, start_y, &visited_zeroes) == -1)
+	{
+		ft_putstr_fd("Error: Map is not enclosed\n", STDERR_FILENO);
+		return (0);
+	}
+	if (visited_zeroes < total_zeroes)
+	{
+		ft_putstr_fd("Error: Not all walkable areas are reachable\n", STDERR_FILENO);
+		return (0);
+        //exit(1);
+	}
+	return (1);
 }
 
-// find palayer position and check the number of player exist in map
 static int find_player_position(char **map, int *pos_x, int *pos_y)
 {
 	int y = 0;
-	int x;
-	int count = 0;
+	int x, count = 0;
 
 	while (map[y])
 	{
@@ -185,7 +159,7 @@ static int find_player_position(char **map, int *pos_x, int *pos_y)
 			{
 				count++;
 				if (count > 1)
-					return (0); // more than one player found
+					return 0;
 				*pos_x = x;
 				*pos_y = y;
 			}
@@ -193,54 +167,41 @@ static int find_player_position(char **map, int *pos_x, int *pos_y)
 		}
 		y++;
 	}
-	return (count == 1); // must be exactly one player
+	return (count == 1);
 }
-
-
-
-// main function to validate the map
 
 int validate_map(t_game *game, char **original_map)
 {
-	int height;
-	int width;
 	char **normalized;
-	int start_x, start_y;
-
-	height = map_height(original_map);
-	width = map_max_width(original_map);
-	if (!find_player_position(original_map, &game->pos_x, &game->pos_y))
+    game-> map_height = map_height(original_map);
+	game ->map_width = map_max_width(original_map);
+    if (game->map_height > 15 || game->map_width > 35)
+    {
+        ft_putstr_fd("Error: Map is so big\n", STDERR_FILENO);
+        ft_free_map(original_map);
+		exit(1);
+    }
+    if (!find_player_position(original_map, &game->pos_x, &game->pos_y))
 	{
 		ft_putstr_fd("Error: Invalid or multiple player positions\n", STDERR_FILENO);
 		ft_free_map(original_map);
-		return (0);
+		exit(1);
 	}
-	
-	if (has_open_on_border(original_map)) {
-    ft_putstr_fd("Error: Map has open space or player on border\n", STDERR_FILENO);
-    ft_free_map(original_map);
-    return 0;
-}
-	normalized = normalized_map(original_map, height, width);
+	normalized = normalized_map(original_map, game->map_height, game->map_width);
 	if (!normalized)
 	{
 		ft_putstr_fd("Error: Memory allocation failed\n", STDERR_FILENO);
 		ft_free_map(original_map);
-		return (0);
+		exit(1);
 	}
 
-	start_x = game->pos_x + 1;
-	start_y = game->pos_y + 1;
-	if (flood_fill_safe(normalized, start_x, start_y, &(int){0}) == -1)
-	{
-		ft_putstr_fd("Error: Map is not surrounded by walls\n", STDERR_FILENO);
-		ft_free_map(normalized);
-		ft_free_map(original_map);
-		return (0);
-	}
-
+     // Adjusted due to padding
+	if (!validate_map_enclosure_and_reachability(normalized, game->pos_x + 1, game->pos_y + 1))
+    {
+        ft_free_map(normalized);
+        ft_free_map(original_map);
+        exit(1);
+    }
 	ft_free_map(normalized);
-	return (1);
+	return 1;
 }
-
-

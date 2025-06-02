@@ -6,7 +6,7 @@
 /*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 23:36:48 by mpazouki          #+#    #+#             */
-/*   Updated: 2025/06/01 22:43:34 by mpazouki         ###   ########.fr       */
+/*   Updated: 2025/06/02 11:14:54 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -411,8 +411,6 @@ static int	read_map_file(t_game *game, int fd)
 
 
 
-
-
 // ---------------------PARSE MAP-------------------------------------
 // main function to parse the map
 static int parse_map_file(const char *filepath, t_game *game)
@@ -445,8 +443,11 @@ static int parse_map_file(const char *filepath, t_game *game)
 
 int extract_map_info(char *map_file, t_game *game)
 {
-	if (!parse_map_file(map_file, game))
-		return(0); 
+	if (parse_map_file(map_file, game) != 0)
+	{
+		ft_free_map(game->map);
+		exit(1);
+	}
 	validate_map(game, game -> map);
-	return 1;
+	return 0;
 }

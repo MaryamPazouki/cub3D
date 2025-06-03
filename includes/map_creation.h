@@ -96,8 +96,8 @@ typedef struct s_game
 	int					map_cols;
 	int					map_width; // int created in map validation
 	int					map_height;// int created in map validation
-	int				pos_x; // double created in map validation (optional)
-	int				pos_y; // double created in map validation (optional)
+	double				pos_x; // double created in map validation (optional)
+	double				pos_y; // double created in map validation (optional)
 	double				dir_angle;
 	double				dir_x;
 	double				dir_y;

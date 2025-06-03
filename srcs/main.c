@@ -22,8 +22,8 @@ static void printGameStruct(t_game *game) {
 	printf("player_count: %d\n", game->player_count);
 	printf("map_width: %d\n", game->map_width);
 	printf("map_height: %d\n", game->map_height);
-	printf("pos_x: %d\n", game->pos_x);
-	printf("pos_y: %d\n", game->pos_y);
+	printf("pos_x: %f\n", game->pos_x);
+	printf("pos_y: %f\n", game->pos_y);
 	printf("dir_angle: %f\n", game->dir_angle);
 	printf("dir_x: %f\n", game->dir_x);
 	printf("dir_y: %f\n", game->dir_y);
@@ -46,9 +46,9 @@ int main(int argc, char **argv)
 		ft_putstr_fd("Usage: ./cub3d map_file\n", STDERR_FILENO);
 		return (1);
 	}
-	if (extract_map_info(argv[1], &game) != 0)
+	if (extract_map_info(argv[1], &game) == 0)
 	{
-		//ft_putstr_fd("Error: Invalid map\n", STDERR_FILENO);
+		ft_putstr_fd("Error: Invalid map\n", STDERR_FILENO);
 		return (1);
 	}
 	if (!game.map)

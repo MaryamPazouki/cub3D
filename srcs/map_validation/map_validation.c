@@ -244,6 +244,7 @@ int validate_map(t_game *game, char **original_map)
         ft_free_map(original_map);
         exit(1);
     }
+	printf("Validating map structure...\n");
 	ft_free_map(normalized);
 	return 1;
 }

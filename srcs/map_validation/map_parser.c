@@ -6,7 +6,7 @@
 /*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 23:36:48 by mpazouki          #+#    #+#             */
-/*   Updated: 2025/06/03 10:50:02 by mpazouki         ###   ########.fr       */
+/*   Updated: 2025/06/03 11:20:50 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ static int check_all_directives_present(t_textures_info *t)
 //handle texture and validate
 static int handle_texture_directive(t_game *game, const char *key, const char *path)
 {
-
+	
 	if (!ft_strcmp(key, "NO"))
 		return set_texture_path(&game->textures_info.n_wall_path, &game->textures_info.has_no, path, "NO");
 	else if (!ft_strcmp(key, "SO"))
@@ -215,12 +215,8 @@ int parse_directive(t_game *game, char *line)
 			return (0);
 		}
 	}
-	else
-	{
-		fprintf(stderr, "Error: Unknown directive: %s\n", tokens[0]);
-		ft_free_map(tokens);
-		return (0);
-	}
+	else 
+ 		fprintf(stderr, "Error: Unknown directive: %s\n", tokens[0]);
 	ft_free_map(tokens);
 	return (1);
 }
@@ -284,8 +280,7 @@ static void	append_map_line(t_game *game, char *line)
 {
 	char	**new_map;
 	int		i;
-	char 	*padded_line;
-
+	
 	count_player_in_line(game, line);
 	i = 0;
 	if (game->map)
@@ -489,7 +484,7 @@ int read_map_file(t_game *game, int fd)
 static int parse_map_file(const char *filepath, t_game *game)
 {
 	int fd;
-	
+
 	if (!has_cub_extension(filepath))
 	{
 		fprintf(stderr, "Error: Map file must have a .cub extension\n");
@@ -516,11 +511,8 @@ static int parse_map_file(const char *filepath, t_game *game)
 
 int extract_map_info(char *map_file, t_game *game)
 {
-	if (parse_map_file(map_file, game) != 0)
-	{
-		ft_free_map(game->map);
-		exit(1);
-	}
-	validate_map(game, game -> map);
-	return 0;
+	if (!parse_map_file(map_file, game))
+		return(0); 
+	//	validate_map(game, game -> map);
+	return 1;
 }

@@ -15,6 +15,15 @@ void	ft_free_map(char **map)
 	free(map);
 }
 
+
+void free_textures_info(t_textures_info *t)
+{
+    if (t->n_wall_path) free(t->n_wall_path);
+    if (t->s_wall_path) free(t->s_wall_path);
+    if (t->w_wall_path) free(t->w_wall_path);
+    if (t->e_wall_path) free(t->e_wall_path);
+}
+
 /* int error_and_return(const char *msg, int code)
 {
 	fprintf(stderr, "\033[31mError: %s\033[0m\n", msg);

@@ -210,9 +210,10 @@ static void sanitize_map(t_game *game, char **map)
 
 int validate_map(t_game *game, char **original_map)
 {
+	printf("Validating map...\n");
 	char **normalized;
-    game-> map_height = map_height(original_map);
-	game ->map_width = map_max_width(original_map);
+    game->map_height = map_height(original_map);
+	game->map_width = map_max_width(original_map);
     if (game->map_height > 15 || game->map_width > 35)
     {
         ft_putstr_fd("Error: Map is so big\n", STDERR_FILENO);
@@ -227,8 +228,8 @@ int validate_map(t_game *game, char **original_map)
 	}
 	sanitize_map(game, original_map);
 	normalized = normalized_map(original_map, game->map_height, game->map_width);
-	//for (int i = 0; original_map[i]; i++)
-    //	printf("%s\n", original_map[i]); 
+	// for (int i = 0; original_map[i]; i++)
+    // 	printf("%s\n", original_map[i]); 
 	if (!normalized)
 	{
 		ft_putstr_fd("Error: Memory allocation failed\n", STDERR_FILENO);

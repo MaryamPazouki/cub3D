@@ -119,7 +119,7 @@ static int	is_valid_texture_path(const char *path)
 
 static int set_texture_path(char **dest, int *flag, const char *path, const char *label)
 {
-	if((*flag)++)
+	if(++(*flag)>1)
 	{
 		fprintf(stderr, "\033[31mError: Duplicate %s directive\033[0m\n", label);
 		return (1);
@@ -280,7 +280,8 @@ static void	append_map_line(t_game *game, char *line)
 {
 	char	**new_map;
 	int		i;
-	
+	char *padded_line;
+
 	count_player_in_line(game, line);
 	i = 0;
 	if (game->map)
@@ -315,6 +316,7 @@ static void	append_map_line(t_game *game, char *line)
 		free(padded_line);
 		exit(EXIT_FAILURE);
 	}
+	new_map[i + 1] = NULL;
 	free(padded_line);
 	free(game->map);
 	game->map = new_map;
@@ -488,7 +490,7 @@ static int parse_map_file(const char *filepath, t_game *game)
 	if (!has_cub_extension(filepath))
 	{
 		fprintf(stderr, "Error: Map file must have a .cub extension\n");
-		return (1);
+		return (0);
 	}
 	fd = open(filepath, O_RDONLY);
 	if (fd < 0)
@@ -496,15 +498,15 @@ static int parse_map_file(const char *filepath, t_game *game)
 	if (read_map_file(game, fd) < 0)
 	{
 		close(fd);
-		return 1;
+		return(0);
 	}
 	close(fd);
 	if (!game->map || !game->map[0])
 	{
 		fprintf(stderr, "Error: Empty map\n");
-		return (1);
+		return (0);
 	}
-	return(0);
+	return(1);
 }
 
 // extract the mapfile and check for validation---------------
@@ -512,7 +514,8 @@ static int parse_map_file(const char *filepath, t_game *game)
 int extract_map_info(char *map_file, t_game *game)
 {
 	if (!parse_map_file(map_file, game))
-		return(0); 
-	//	validate_map(game, game -> map);
-	return 1;
+		return(0);
+	printf("Map file parsed successfully.\n");
+	validate_map(game, game->map);
+	return (1);
 }

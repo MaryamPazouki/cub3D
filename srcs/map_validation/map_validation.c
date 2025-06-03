@@ -6,11 +6,19 @@
 /*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 21:29:53 by mpazouki          #+#    #+#             */
-/*   Updated: 2025/06/02 12:03:31 by mpazouki         ###   ########.fr       */
+/*   Updated: 2025/06/02 23:16:33 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main_header.h"
+
+static int ft_strlen_with_space(const char *map)
+{
+    int i = 0;
+    while (map[i])
+        i++;
+    return i;
+}
 
 static int map_height(char **map)
 {
@@ -30,11 +38,12 @@ static int map_max_width(char **map)
 		return 0;
 	while (map[i])
 	{
-		int len = ft_strlen(map[i]);
+		int len = ft_strlen_with_space(map[i]);
 		if (len > max)
 			max = len;
 		i++;
 	}
+	printf("%d\n", max);
 	return max;
 }
 //--------------------pad the map with spaces----------------------------
@@ -55,33 +64,58 @@ static char *pad_line_with_walls(const char *line, int target_width)
 	char *padded_line = malloc(sizeof(char) * (target_width + 3));
 	if (!padded_line)
 		return NULL;
+
 	padded_line[0] = '6';
-	for (int i = 0; i < target_width; i++)
+
+	int read_i = 0;  // for reading from `line`
+	int write_i = 1; // for writing to `padded_line`
+
+	// Handle leading spaces/tabs
+	while (line[read_i] == ' ' || line[read_i] == '\t')
 	{
-		if (i < len)
+		padded_line[write_i++] = '6';
+		read_i++;
+	}
+
+	// Copy rest of line, converting inner spaces/tabs to '1'
+	while (write_i <= target_width)
+	{
+		if (read_i < len)
 		{
-			if (line[i] == ' ' || line[i] == '\t') // If character is a space or tab
-				padded_line[i + 1] = '1'; // Treat it as a wall
+			if (line[read_i] == ' ' || line[read_i] == '\t')
+				padded_line[write_i++] = '1';
 			else
-				padded_line[i + 1] = line[i];
+				padded_line[write_i++] = line[read_i];
+			read_i++;
 		}
 		else
-			padded_line[i + 1] = '6'; // Pad with '6'
+			padded_line[write_i++] = '6'; // Pad with '6'
 	}
+
 	padded_line[target_width + 1] = '6';
 	padded_line[target_width + 2] = '\0';
+	
+	printf("%s\n", padded_line);
 	return padded_line;
 }
 
+
 static char **normalized_map(char **map, int height, int width)
 {
-	char **normalized = malloc(sizeof(char *) * (height + 3));
+	char **normalized;
+	int	i;
+	
+	i = 0;
+	normalized = malloc(sizeof(char *) * (height + 3));
 	if (!normalized)
 		return NULL;
 
 	normalized[0] = create_padding_row(width);
-	for (int i = 0; i < height; i++)
+	while(i < height)
+	{	
 		normalized[i + 1] = pad_line_with_walls(map[i], width);
+		i++;
+	}
 	normalized[height + 1] = create_padding_row(width);
 	normalized[height + 2] = NULL;
 	return normalized;
@@ -129,7 +163,6 @@ static int validate_map_enclosure_and_reachability(char **normalized_map, int st
 {
 	int total_zeroes = count_total_zeroes(normalized_map);
 	int visited_zeroes = 0;
-
 	if (flood_fill_safe(normalized_map, start_x, start_y, &visited_zeroes) == -1)
 	{
 		ft_putstr_fd("Error: Map is not enclosed\n", STDERR_FILENO);
@@ -170,6 +203,28 @@ static int find_player_position(char **map, int *pos_x, int *pos_y)
 	return (count == 1);
 }
 
+static void sanitize_map(t_game *game, char **map)
+{
+	int y = 0;
+	while (map[y])
+	{
+		int x = 0;
+		while (map[y][x])
+		{
+			if ((y == 0 || y == game->map_height - 1) &&
+				(map[y][x] == ' ' || map[y][x] == '\t'))
+			{
+				map[y][x] = '6'; // For top or bottom rows, treat space/tab as padding
+			}
+			x++;
+		}
+		y++;
+	}
+}
+
+
+
+
 int validate_map(t_game *game, char **original_map)
 {
 	char **normalized;
@@ -187,7 +242,10 @@ int validate_map(t_game *game, char **original_map)
 		ft_free_map(original_map);
 		exit(1);
 	}
+	sanitize_map(game, original_map);
 	normalized = normalized_map(original_map, game->map_height, game->map_width);
+	for (int i = 0; original_map[i]; i++)
+    	printf("%s\n", original_map[i]); 
 	if (!normalized)
 	{
 		ft_putstr_fd("Error: Memory allocation failed\n", STDERR_FILENO);

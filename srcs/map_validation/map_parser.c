@@ -6,7 +6,7 @@
 /*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 23:36:48 by mpazouki          #+#    #+#             */
-/*   Updated: 2025/06/02 11:14:54 by mpazouki         ###   ########.fr       */
+/*   Updated: 2025/06/03 10:49:00 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,37 +256,75 @@ static void count_player_in_line(t_game *game, const char *line)
 	}
 }
 
+static char *pad_line_with_spaces(char *line)
+{
+	int len;
+	int i;
+	char *new_line;
+
+	i = 0;
+	len = ft_strlen(line);
+	new_line = malloc(sizeof (char) *(len + 1));
+	if (!new_line)
+		return (NULL);
+	while(line[i])
+	{	
+		if (line[i]== ' ' || line[i] == '\t')
+			new_line[i] = '1';
+		else
+			new_line[i] = line[i];
+		i++;
+	}
+	new_line[i] = '\0';
+	return(new_line);
+}
 
 // -------------------------append lines in MAP-----------------------
 static void	append_map_line(t_game *game, char *line)
 {
 	char	**new_map;
 	int		i;
+	char 	*padded_line;
 
 	count_player_in_line(game, line);
 	i = 0;
 	if (game->map)
 		while (game->map[i])
 			i++;
+
+	padded_line = pad_line_with_spaces(line);
+	if (!padded_line)
+	{
+		perror("Failed to pad line");
+		exit(EXIT_FAILURE);
+	}
+
+	// DEBUG PRINT:
+	//printf("Padded map line: [%s]\n", padded_line);
+
 	new_map = (char **)ft_calloc(i + 2, sizeof(char *));
 	if (!new_map)
 	{
 		perror("Failed to allocate map");
 		ft_free_map(game->map);
+		free(padded_line);
 		exit(EXIT_FAILURE);
 	}
 	for (int j = 0; j < i; j++)
 		new_map[j] = game->map[j];
-	new_map[i] = ft_strdup(line);
+	new_map[i] = ft_strdup(padded_line);
 	if (!new_map[i])
 	{
 		perror("Failed to duplicate map line");
 		ft_free_map(new_map);
+		free(padded_line);
 		exit(EXIT_FAILURE);
 	}
+	free(padded_line);
 	free(game->map);
 	game->map = new_map;
 }
+
 
 static int is_map_line(const char *line)
 {
@@ -330,7 +368,32 @@ static int	handle_map_line(t_game *game, char *line)
 }
 
 
-static int	read_map_file(t_game *game, int fd)
+static int is_blank_line(const char *line)
+{
+	while (*line)
+	{
+		if (*line != ' ' && *line != '\t' && *line != '\n')
+			return (0);
+		line++;
+	}
+	return (1);
+}
+
+static size_t	ft_strcspn(const char *s, const char *reject)
+{
+	size_t i = 0;
+	while (s[i])
+	{
+		for (size_t j = 0; reject[j]; j++)
+		{
+			if (s[i] == reject[j])
+				return (i);
+		}
+		i++;
+	}
+	return (i);
+}
+int read_map_file(t_game *game, int fd)
 {
 	char	*line;
 	char	*trimmed;
@@ -340,17 +403,27 @@ static int	read_map_file(t_game *game, int fd)
 
 	while ((line = get_next_line(fd)))
 	{
-		trimmed = ft_strtrim(line, " \t\n");
-		free(line);
-		if (!trimmed)
-			return (fprintf(stderr, "Memory allocation error\n"), -1);
-
-		if (*trimmed == '\0')  // Empty line
+		if (is_blank_line(line))
 		{
 			if (map_started)
 				blank_after_map = 1;
-			free(trimmed);
+			free(line);
 			continue;
+		}
+
+		if (blank_after_map)
+		{
+			fprintf(stderr, "\033[31mError: Garbage after map end:\033[0m %s\n", line);
+			free(line);
+			return (-1);
+		}
+
+		// Trim for directive check
+		trimmed = ft_strtrim(line, " \t\n");
+		if (!trimmed)
+		{
+			free(line);
+			return (fprintf(stderr, "Memory allocation error\n"), -1);
 		}
 
 		if (!map_started)
@@ -358,56 +431,63 @@ static int	read_map_file(t_game *game, int fd)
 			if (handle_directive_line(game, trimmed, &directive_count))
 			{
 				free(trimmed);
+				free(line);
 				continue;
 			}
-			if (handle_map_line(game, trimmed))
+
+			// Remove newline before map line check
+			line[ft_strcspn(line, "\n")] = '\0';
+
+			if (is_map_line(line))
 			{
 				if (!check_all_directives_present(&game->textures_info))
 				{
 					fprintf(stderr, "\033[31mError: Map started before all directives were defined\033[0m\n");
 					free(trimmed);
+					free(line);
 					return (-1);
 				}
 				map_started = 1;
-				//append_map_line(game, trimmed);
+				handle_map_line(game, line);
 				free(trimmed);
+				free(line);
 				continue;
 			}
-			fprintf(stderr, "\033[31mError: Invalid directive or garbage line:\033[0m %s\n", trimmed);
+
+			// Not a directive, not a map line → garbage
+			fprintf(stderr, "\033[31mError: Invalid directive or garbage line:\033[0m %s\n", line);
 			free(trimmed);
+			free(line);
 			return (-1);
 		}
 		else
 		{
-			// Already inside map
-			if (blank_after_map)
+			// Map already started
+			line[ft_strcspn(line, "\n")] = '\0';
+			if (!handle_map_line(game, line))
 			{
-				fprintf(stderr, "\033[31mError: Garbage after map end:\033[0m %s\n", trimmed);
+				fprintf(stderr, "\033[31mError: Invalid map line:\033[0m %s\n", line);
 				free(trimmed);
+				free(line);
 				return (-1);
 			}
-			if (!handle_map_line(game, trimmed))
-			{
-				fprintf(stderr, "\033[31mError: Invalid map line:\033[0m %s\n", trimmed);
-				free(trimmed);
-				return (-1);
-			}
-			//append_map_line(game, trimmed);
-			free(trimmed);
 		}
+
+		free(trimmed);
+		free(line);
 	}
+
 	if (!map_started)
 	{
 		fprintf(stderr, "\033[31mError: No map found in file\033[0m\n");
 		return (-1);
 	}
-	if (!check_all_directives_present(&game->textures_info))
-	{
-		fprintf(stderr, "\033[31mError: Missing one or more required directives\033[0m\n");
-		return (-1);
-	}
+
 	return (0);
 }
+
+
+
 
 
 

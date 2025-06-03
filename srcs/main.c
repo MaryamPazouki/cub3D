@@ -1,11 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/03 11:25:31 by mpazouki          #+#    #+#             */
+/*   Updated: 2025/06/03 11:26:33 by mpazouki         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "main_header.h"
 
-
-
-
-
-
-
+//here is the last version 
 int main(int argc, char **argv)
 {
 	t_game game;
@@ -26,13 +33,12 @@ int main(int argc, char **argv)
 		ft_putstr_fd("Error: Invalid map\n", STDERR_FILENO);
 		return (1);
 	}
-	print_map(game.map);
-	if (initialize_mlx_and_launch_game(&game) == -1)
-	{
-		ft_putstr_fd("Error: Failed to initialize graphics\n", STDERR_FILENO);
-		ft_free_map(game.map);
-		return (1);
-	}
+	// if (initialize_mlx_and_launch_game(&game) == -1)
+	// {
+	// 	ft_putstr_fd("Error: Failed to initialize graphics\n", STDERR_FILENO);
+	// 	ft_free_map(game.map);
+	// 	return (1);
+	// }
 	return (0);
 }
 

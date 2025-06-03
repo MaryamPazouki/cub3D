@@ -27,12 +27,12 @@ int main(int argc, char **argv)
 		return (1);
 	}
 	print_map(game.map);
-	// if (initialize_mlx_and_launch_game(&game) == -1)
-	// {
-	// 	ft_putstr_fd("Error: Failed to initialize graphics\n", STDERR_FILENO);
-	// 	ft_free_map(game.map);
-	// 	return (1);
-	// }
+	if (initialize_mlx_and_launch_game(&game) == -1)
+	{
+		ft_putstr_fd("Error: Failed to initialize graphics\n", STDERR_FILENO);
+		ft_free_map(game.map);
+		return (1);
+	}
 	return (0);
 }
 

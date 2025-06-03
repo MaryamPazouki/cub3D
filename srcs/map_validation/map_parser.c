@@ -6,7 +6,7 @@
 /*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 23:36:48 by mpazouki          #+#    #+#             */
-/*   Updated: 2025/06/03 10:49:00 by mpazouki         ###   ########.fr       */
+/*   Updated: 2025/06/03 10:50:02 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -472,7 +472,6 @@ int read_map_file(t_game *game, int fd)
 				return (-1);
 			}
 		}
-
 		free(trimmed);
 		free(line);
 	}
@@ -482,14 +481,8 @@ int read_map_file(t_game *game, int fd)
 		fprintf(stderr, "\033[31mError: No map found in file\033[0m\n");
 		return (-1);
 	}
-
 	return (0);
 }
-
-
-
-
-
 
 // ---------------------PARSE MAP-------------------------------------
 // main function to parse the map

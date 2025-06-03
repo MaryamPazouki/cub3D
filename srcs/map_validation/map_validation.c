@@ -6,7 +6,7 @@
 /*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 21:29:53 by mpazouki          #+#    #+#             */
-/*   Updated: 2025/06/02 23:16:33 by mpazouki         ###   ########.fr       */
+/*   Updated: 2025/06/03 11:00:21 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ static int map_max_width(char **map)
 			max = len;
 		i++;
 	}
-	printf("%d\n", max);
 	return max;
 }
 //--------------------pad the map with spaces----------------------------
@@ -58,46 +57,33 @@ static char *create_padding_row(int width)
 	return padding_row;
 }
 
-static char *pad_line_with_walls(const char *line, int target_width)
+char *pad_line_with_walls(const char *line, int target_width)
 {
 	int len = ft_strlen(line);
-	char *padded_line = malloc(sizeof(char) * (target_width + 3));
-	if (!padded_line)
+	char *padded = malloc(sizeof(char) * (target_width + 3)); // +2 for borders, +1 for '\0'
+	if (!padded)
 		return NULL;
 
-	padded_line[0] = '6';
+	padded[0] = '6';
 
-	int read_i = 0;  // for reading from `line`
-	int write_i = 1; // for writing to `padded_line`
-
-	// Handle leading spaces/tabs
-	while (line[read_i] == ' ' || line[read_i] == '\t')
+	// Copy characters from line
+	int i = 0;
+	while (i < target_width)
 	{
-		padded_line[write_i++] = '6';
-		read_i++;
-	}
-
-	// Copy rest of line, converting inner spaces/tabs to '1'
-	while (write_i <= target_width)
-	{
-		if (read_i < len)
-		{
-			if (line[read_i] == ' ' || line[read_i] == '\t')
-				padded_line[write_i++] = '1';
-			else
-				padded_line[write_i++] = line[read_i];
-			read_i++;
-		}
+		if (i < len)
+			padded[i + 1] = line[i];
 		else
-			padded_line[write_i++] = '6'; // Pad with '6'
+			padded[i + 1] = '6'; // pad with '6' if line is shorter
+		i++;
 	}
 
-	padded_line[target_width + 1] = '6';
-	padded_line[target_width + 2] = '\0';
-	
-	printf("%s\n", padded_line);
-	return padded_line;
+	padded[target_width + 1] = '6';
+	padded[target_width + 2] = '\0';
+
+	//printf("Padded: %s\n", padded); // Debug output
+	return padded;
 }
+
 
 
 static char **normalized_map(char **map, int height, int width)
@@ -222,9 +208,6 @@ static void sanitize_map(t_game *game, char **map)
 	}
 }
 
-
-
-
 int validate_map(t_game *game, char **original_map)
 {
 	char **normalized;
@@ -244,8 +227,8 @@ int validate_map(t_game *game, char **original_map)
 	}
 	sanitize_map(game, original_map);
 	normalized = normalized_map(original_map, game->map_height, game->map_width);
-	for (int i = 0; original_map[i]; i++)
-    	printf("%s\n", original_map[i]); 
+	//for (int i = 0; original_map[i]; i++)
+    //	printf("%s\n", original_map[i]); 
 	if (!normalized)
 	{
 		ft_putstr_fd("Error: Memory allocation failed\n", STDERR_FILENO);

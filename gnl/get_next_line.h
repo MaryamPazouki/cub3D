@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zkhojazo <zkhojazo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 14:49:26 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/02/22 13:15:19 by zkhojazo         ###   ########.fr       */
+/*   Updated: 2025/06/04 00:30:17 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,6 @@ int		ft_read_lst(int fd, t_gnl_list **lst, int temp_rd, int acum);
 char	*ft_create_residual(char *str, char	**residual, char **line);
 char	*get_next_line(int fd);
 int		ft_free_rd(char *buffer, t_gnl_list **lst);
+/* void	free_all_gnl_residuals(void); */
 
 #endif

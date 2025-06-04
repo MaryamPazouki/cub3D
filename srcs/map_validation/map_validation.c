@@ -6,7 +6,7 @@
 /*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 21:29:53 by mpazouki          #+#    #+#             */
-/*   Updated: 2025/06/03 11:00:21 by mpazouki         ###   ########.fr       */
+/*   Updated: 2025/06/03 21:19:30 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,7 @@ static int validate_map_enclosure_and_reachability(char **normalized_map, int st
 	return (1);
 }
 
-static int find_player_position(char **map, int *pos_x, int *pos_y)
+static int find_player_position(char **map, double *pos_x, double *pos_y)
 {
 	int y = 0;
 	int x, count = 0;

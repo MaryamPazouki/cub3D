@@ -6,11 +6,13 @@
 /*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 11:25:31 by mpazouki          #+#    #+#             */
-/*   Updated: 2025/06/03 11:26:33 by mpazouki         ###   ########.fr       */
+/*   Updated: 2025/06/04 09:06:00 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main_header.h"
+//here is the last version to subbmit
+
 
 static void printGameStruct(t_game *game) {
 	printf("n_wall_path: %s\n", game->textures_info.n_wall_path);
@@ -32,10 +34,10 @@ static void printGameStruct(t_game *game) {
 	printf("map_rows: %d\n", game->map_rows);
 	printf("map_cols: %d\n", game->map_cols);
 	print_map(game->map);
-}
+} 
 
 
-//here is the last version 
+
 int main(int argc, char **argv)
 {
 	t_game game;
@@ -48,26 +50,32 @@ int main(int argc, char **argv)
 	}
 	if (extract_map_info(argv[1], &game) == 0)
 	{
-		ft_putstr_fd("Error: Invalid map\n", STDERR_FILENO);
-		return (1);
+		ft_free_map(game.map);
+		ft_putstr_fd("Error: Failed to extract map info\n", STDERR_FILENO);
+		free_game(&game);
+		exit(1);
 	}
 	if (!game.map)
 	{
 		ft_putstr_fd("Error: Invalid map\n", STDERR_FILENO);
+		free_game(&game);
 		return (1);
 	}
-	//print_map(game.map);
+	print_map(game.map);
 	printGameStruct(&game);
-	if (initialize_mlx_and_launch_game(&game) == -1)
+ 	if (initialize_mlx_and_launch_game(&game) == -1)
 	{
 		ft_putstr_fd("Error: Failed to initialize graphics\n", STDERR_FILENO);
 		ft_free_map(game.map);
 		return (1);
-	}
-	free_textures_info(&game.textures_info);
-	ft_free_map(game.map);
+	} 
+		
+	free_game(&game);
 	return (0);
 }
 
 // make a 2D window with walls and player looking at a direction
 // define the size of each square in the map and change color of the square based on type
+
+
+/* valgrind --leak-check=full --show-leak-kinds=all ./cub3d maps/map4.cub */

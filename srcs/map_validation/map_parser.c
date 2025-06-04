@@ -6,7 +6,7 @@
 /*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 23:36:48 by mpazouki          #+#    #+#             */
-/*   Updated: 2025/06/03 11:20:50 by mpazouki         ###   ########.fr       */
+/*   Updated: 2025/06/04 09:21:10 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,24 +61,25 @@ static int parse_color(const char *value, double *color_field, int *flag, const 
 
 	if (!value)
 	{
-		fprintf(stderr, "Error: Missing value for %s color\n", label);
+		fprintf(stderr, "Error: Missing value for %s color\033[0m\n", label);
 		return (0);
 	}
 	if ((*flag)++)
 	{
-		fprintf(stderr, "Error: Duplicate %s directive\n", label);
+		fprintf(stderr, "\033[31mError: Duplicate %s directive\033[0m\n", label);
+		ft_free_map(NULL); // Free any previously allocated memory
 		return (0);
 	}
 	raw_color = ft_split_tokens(value, ", \t");
 	if (!raw_color || !raw_color[0] || !raw_color[1] || !raw_color[2] || raw_color[3])
 	{
-		fprintf(stderr, "Error: Invalid %s color format. Expected: R,G,B\n", label);
+		fprintf(stderr, "\033[31mError: Invalid %s color format. Expected: R,G,B\033[0m\n", label);
 		ft_free_map(raw_color);
 		return (0);
 	}
 	if (!ft_validate_color(raw_color))
 	{
-		fprintf(stderr, "Error: %s color values must be in range [0–255]\n", label);
+		fprintf(stderr, "\033[31mError: %s color values must be in range [0–255]\033[0m\n", label);
 		return (0);
 	}
 	*color_field = encode_rgb(
@@ -91,7 +92,7 @@ static int parse_color(const char *value, double *color_field, int *flag, const 
 
 
 // valide texture and pathfile
-static int	is_valid_texture_path(const char *path)
+static int	is_valid_texture_path(t_game *game, const char *path)
 {
 	int		fd;
 
@@ -103,7 +104,8 @@ static int	is_valid_texture_path(const char *path)
 	if (len < 4 || ft_strncmp(path + len - 4, ".xpm", 4) != 0)
 	{
 		fprintf(stderr, "\033[31mError: Invalid texture extension for '%s'. Must be .xpm\033[0m\n", path);
-		return (0);
+		free_game(game); // Free any previously allocated memory
+		exit(1);
 	}
 
 	// Try to open the file to check existence and readability
@@ -111,20 +113,22 @@ static int	is_valid_texture_path(const char *path)
 	if (fd < 0)
 	{
 		fprintf(stderr, "\033[31mError: Invalid texture path for '%s'\033[0m\n", path);
-		return(0);
+		free_game(game); // Free any previously allocated memory
+		exit(1);
 	}
 	close(fd);
 	return (1);
 }
 
-static int set_texture_path(char **dest, int *flag, const char *path, const char *label)
+static int set_texture_path(t_game *game, char **dest, int *flag, const char *path, const char *label)
 {
 	if(++(*flag)>1)
 	{
 		fprintf(stderr, "\033[31mError: Duplicate %s directive\033[0m\n", label);
-		return (1);
+		ft_free_map(NULL); // Free any previously allocated memory
+		exit(1);
 	}
-	if (!is_valid_texture_path(path))
+	if (!is_valid_texture_path(game, path))
 		return (1);
 	if (*dest)
 		free(*dest);
@@ -158,31 +162,39 @@ static int handle_texture_directive(t_game *game, const char *key, const char *p
 {
 	
 	if (!ft_strcmp(key, "NO"))
-		return set_texture_path(&game->textures_info.n_wall_path, &game->textures_info.has_no, path, "NO");
+		return set_texture_path(game, &game->textures_info.n_wall_path, &game->textures_info.has_no, path, "NO");
 	else if (!ft_strcmp(key, "SO"))
-		return set_texture_path(&game->textures_info.s_wall_path, &game->textures_info.has_so, path, "SO");
+		return set_texture_path(game,&game->textures_info.s_wall_path, &game->textures_info.has_so, path, "SO");
 	else if (!ft_strcmp(key, "WE"))
-		return set_texture_path(&game->textures_info.w_wall_path, &game->textures_info.has_we, path, "WE");
+		return set_texture_path(game,&game->textures_info.w_wall_path, &game->textures_info.has_we, path, "WE");
 	else if (!ft_strcmp(key, "EA"))
-		return set_texture_path(&game->textures_info.e_wall_path, &game->textures_info.has_ea, path, "EA");
+		return set_texture_path(game, &game->textures_info.e_wall_path, &game->textures_info.has_ea, path, "EA");
 	fprintf(stderr, "Error: Unknown texture key: %s\n", key);
 	return (1);
 }
 
 static int handle_color_directive(t_game *game, const char *key, const char *value)
 {
-	if (!ft_strcmp(key, "F"))
-	{
-		return parse_color(value,
-				&game->textures_info.floor_color, &game->textures_info.has_f, "F");
-	}
-	if (!ft_strcmp(key, "C"))
-	{
-		return parse_color(value,
-				&game->textures_info.ceiling_color, &game->textures_info.has_c, "C");
-	}
-	fprintf(stderr, "Error: Unknown color key: %s\n", key);
-	return (0);
+    if (!ft_strcmp(key, "F"))
+    {
+        if (!parse_color(value, &game->textures_info.floor_color, &game->textures_info.has_f, "F"))
+        {
+			free_game(game);
+			exit(1);
+		}
+        return (0);
+    }
+    else if (!ft_strcmp(key, "C"))
+    {
+        if (!parse_color(value, &game->textures_info.ceiling_color, &game->textures_info.has_c, "C"))
+        {
+			free_game(game);
+			exit(1);
+		}
+        return (0); 
+    }
+    fprintf(stderr, "Error: Unknown color key: %s\n", key);
+    return (1); // Return error for unknown key
 }
 
 
@@ -195,7 +207,7 @@ int parse_directive(t_game *game, char *line)
 	if (!tokens || !tokens[0] || !tokens[1])
 	{
 		fprintf(stderr, "Error: Invalid directive format\n");
-		ft_free_map(tokens);
+		free_tokens(tokens);
 		return (0);
 	}
 	if (!ft_strcmp(tokens[0], "NO") || !ft_strcmp(tokens[0], "SO") ||
@@ -203,7 +215,7 @@ int parse_directive(t_game *game, char *line)
 	{
 		if (handle_texture_directive(game, tokens[0], tokens[1]))
 		{
-			ft_free_map(tokens);
+			free_tokens(tokens);
 			return (0);
 		}
 	}
@@ -211,13 +223,17 @@ int parse_directive(t_game *game, char *line)
 	{
 		if (handle_color_directive(game, tokens[0], tokens[1]))
 		{
-			ft_free_map(tokens);
-			return (0);
+			free_tokens(tokens);
+			return (1);
 		}
 	}
-	else 
+	else
+	{
  		fprintf(stderr, "Error: Unknown directive: %s\n", tokens[0]);
-	ft_free_map(tokens);
+		free_tokens(tokens);
+		return (0);
+	}
+	free_tokens(tokens);
 	return (1);
 }
 
@@ -242,11 +258,12 @@ static void count_player_in_line(t_game *game, const char *line)
 		if (*line == 'N' || *line == 'S' || *line == 'E' || *line == 'W')
 		{
 			game->player_count++;
-			/* if (game->player_count > 1)
+			if (game->player_count > 1)
 			{
 				fprintf(stderr, "\033[31mError: Multiple player positions found\033[0m\n");
+				ft_free_map(game->map);
 				exit(1);
-			} */
+			}
 		}
 		line++;
 	}
@@ -350,8 +367,9 @@ static int is_map_line(const char *line)
 static int	handle_directive_line(t_game *game, char *line, int *directive_count)
  {
 	if (!is_directive(line))
-		return (0);
-	parse_directive(game, line);
+    	return (0);
+	if (parse_directive(game, line) != 0)
+    	return (1); // Return error if directive parsing failed
 	(*directive_count)++;
 	return (1);
 }
@@ -419,7 +437,8 @@ int read_map_file(t_game *game, int fd)
 		trimmed = ft_strtrim(line, " \t\n");
 		if (!trimmed)
 		{
-			free(line);
+			free(trimmed);
+    		free(line);
 			return (fprintf(stderr, "Memory allocation error\n"), -1);
 		}
 
@@ -478,44 +497,55 @@ int read_map_file(t_game *game, int fd)
 		fprintf(stderr, "\033[31mError: No map found in file\033[0m\n");
 		return (-1);
 	}
+	// Free the trimmed line
+	/* free(trimmed);
+	free(line); */
 	return (0);
-}
+} 
 
 // ---------------------PARSE MAP-------------------------------------
 // main function to parse the map
 static int parse_map_file(const char *filepath, t_game *game)
 {
-	int fd;
-
-	if (!has_cub_extension(filepath))
-	{
-		fprintf(stderr, "Error: Map file must have a .cub extension\n");
-		return (0);
-	}
-	fd = open(filepath, O_RDONLY);
-	if (fd < 0)
-		return(perror("Failed to open map") , -1);
-	if (read_map_file(game, fd) < 0)
-	{
-		close(fd);
-		return(0);
-	}
-	close(fd);
-	if (!game->map || !game->map[0])
-	{
-		fprintf(stderr, "Error: Empty map\n");
-		return (0);
-	}
-	return(1);
+    int fd;
+    if (!has_cub_extension(filepath))
+    {
+        fprintf(stderr, "Error: Map file must have a .cub extension\n");
+        free_game(game);
+        return (0);
+    }
+    fd = open(filepath, O_RDONLY);
+    if (fd < 0) {
+        perror("Failed to open map");
+        free_game(game);
+        return 0;
+    }
+    if (read_map_file(game, fd) < 0)
+    {
+        close(fd);
+        free_game(game);
+        return 0;
+    }
+    close(fd);
+    if (!game->map || !game->map[0])
+    {
+        fprintf(stderr, "Error: Empty map\n");
+        free_game(game);
+        return 0;
+    }
+    return 1;
 }
 
 // extract the mapfile and check for validation---------------
 
 int extract_map_info(char *map_file, t_game *game)
 {
-	if (!parse_map_file(map_file, game))
-		return(0);
-	printf("Map file parsed successfully.\n");
-	validate_map(game, game->map);
-	return (1);
+    if (!parse_map_file(map_file, game))
+    {
+        free_game(game); 
+        return 0;
+    }
+    printf("Map file parsed successfully.\n");
+    validate_map(game, game->map);
+    return 1;
 }

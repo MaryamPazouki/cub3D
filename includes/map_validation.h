@@ -11,8 +11,10 @@
 
 // map_validation_utils.c
 void	ft_free_map(char **map);
-void free_textures_info(t_textures_info *t);
+//void free_textures_info(t_textures_info *t);
+void free_game(t_game *game);
 int encode_rgb(int r, int g, int b);
+void free_tokens(char **tokens);
 
 
 

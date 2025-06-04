@@ -1,5 +1,6 @@
 #include "map_validation.h"
 
+
 void	ft_free_map(char **map)
 {
 	int i;
@@ -14,21 +15,36 @@ void	ft_free_map(char **map)
 	}
 	free(map);
 }
-
-
-void free_textures_info(t_textures_info *t)
+void free_game(t_game *game)
 {
-    if (t->n_wall_path) free(t->n_wall_path);
-    if (t->s_wall_path) free(t->s_wall_path);
-    if (t->w_wall_path) free(t->w_wall_path);
-    if (t->e_wall_path) free(t->e_wall_path);
+	ft_free_map(game->map);
+    free(game->textures_info.n_wall_path);
+    free(game->textures_info.s_wall_path);
+    free(game->textures_info.w_wall_path);
+    free(game->textures_info.e_wall_path);
+	game->map = NULL;
+    game->textures_info.n_wall_path = NULL;
+    game->textures_info.s_wall_path = NULL;
+    game->textures_info.w_wall_path = NULL;
+    game->textures_info.e_wall_path = NULL;
+	//free_all_gnl_residuals();
+}
+void	free_all_and_exit(t_game *game, const char *msg, int status)
+{
+	if (msg)
+		fprintf(stderr, "Error: %s\n", msg);
+	free_game(game);
+	exit(status);
 }
 
-/* int error_and_return(const char *msg, int code)
+void free_tokens(char **tokens)
 {
-	fprintf(stderr, "\033[31mError: %s\033[0m\n", msg);
-	return code;
-} */
+    int i = 0;
+    while (tokens && tokens[i])
+        free(tokens[i++]);
+    free(tokens);
+}
+
 
 
 int encode_rgb(int r, int g, int b)

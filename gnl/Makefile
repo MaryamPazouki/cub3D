@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: zkhojazo <zkhojazo@student.42.fr>          +#+  +:+       +#+         #
+#    By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/22 13:12:18 by zkhojazo          #+#    #+#              #
-#    Updated: 2025/02/05 11:34:37 by zkhojazo         ###   ########.fr        #
+#    Updated: 2025/06/04 00:29:56 by mpazouki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,8 @@ CFLAGS = -Wall -Wextra -Werror -fPIC
 NAME = libgnl.a
 
 SRCS = get_next_line.c \
-		get_next_line_utils.c
+		get_next_line_utils.c 
+		//free_gnl.c 
 
 OBJS = $(SRCS:%.c=%.o)
 

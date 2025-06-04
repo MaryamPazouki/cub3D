@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mpazouki <mpazouki@student.42.fr>          #+#  +:+       +#+        */
+/*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-07-07 14:18:37 by mpazouki          #+#    #+#             */
-/*   Updated: 2024-07-07 14:18:37 by mpazouki         ###   ########.fr       */
+/*   Created: 2024/07/07 14:18:37 by mpazouki          #+#    #+#             */
+/*   Updated: 2025/06/04 00:29:11 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,6 @@ void	node_with_nl(t_list **lst);
 void	clear_list(t_list **lst, t_list	*nl_node, char	*buf);
 void	copy_str(t_list *lst, char *str);
 char	*get_line_new(t_list *list);
+//void	free_all_gnl_residuals(void);
 
 #endif

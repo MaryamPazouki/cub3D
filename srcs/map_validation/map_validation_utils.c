@@ -17,17 +17,21 @@ void	ft_free_map(char **map)
 }
 void free_game(t_game *game)
 {
+	if (!game)
+        return;
+	
 	ft_free_map(game->map);
     free(game->textures_info.n_wall_path);
     free(game->textures_info.s_wall_path);
     free(game->textures_info.w_wall_path);
     free(game->textures_info.e_wall_path);
-	game->map = NULL;
-    game->textures_info.n_wall_path = NULL;
-    game->textures_info.s_wall_path = NULL;
-    game->textures_info.w_wall_path = NULL;
-    game->textures_info.e_wall_path = NULL;
-	//free_all_gnl_residuals();
+	// game->map = NULL;
+    // game->textures_info.n_wall_path = NULL;
+    // game->textures_info.s_wall_path = NULL;
+    // game->textures_info.w_wall_path = NULL;
+    // game->textures_info.e_wall_path = NULL;
+	// free(game);
+	// free_all_gnl_residuals();
 }
 void	free_all_and_exit(t_game *game, const char *msg, int status)
 {

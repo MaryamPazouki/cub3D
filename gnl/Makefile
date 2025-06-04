@@ -15,8 +15,7 @@ CFLAGS = -Wall -Wextra -Werror -fPIC
 NAME = libgnl.a
 
 SRCS = get_next_line.c \
-		get_next_line_utils.c 
-		//free_gnl.c 
+		get_next_line_utils.c\
 
 OBJS = $(SRCS:%.c=%.o)
 

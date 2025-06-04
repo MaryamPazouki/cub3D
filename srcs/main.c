@@ -36,7 +36,40 @@ static void printGameStruct(t_game *game) {
 	print_map(game->map);
 } 
 
+// int main(int argc, char **argv)
+// {
+//     t_game game;
 
+//     ft_memset(&game, 0, sizeof(t_game));
+//     if (argc != 2)
+//     {
+//         ft_putstr_fd("Usage: ./cub3d map_file\n", STDERR_FILENO);
+//         return (1);
+//     }
+//     if (extract_map_info(argv[1], &game) == 0)
+//     {
+//         ft_putstr_fd("Error: Failed to extract map info\n", STDERR_FILENO);
+//         free_game(&game);
+//         return (1);
+//     }
+//     if (!game.map)
+//     {
+//         ft_putstr_fd("Error: Invalid map\n", STDERR_FILENO);
+//         free_game(&game);
+//         return (1);
+//     }
+//     print_map(game.map);
+//     printGameStruct(&game);
+//      if (initialize_mlx_and_launch_game(&game) == -1)
+//     {
+//         ft_putstr_fd("Error: Failed to initialize graphics\n", STDERR_FILENO);
+//         free_game(&game);
+//         return (1);
+//     } 
+        
+//     free_game(&game);
+//     return (0);
+// }
 
 int main(int argc, char **argv)
 {
@@ -46,36 +79,35 @@ int main(int argc, char **argv)
 	if (argc != 2)
 	{
 		ft_putstr_fd("Usage: ./cub3d map_file\n", STDERR_FILENO);
-		return (1);
+		return (0);
 	}
 	if (extract_map_info(argv[1], &game) == 0)
 	{
-		ft_free_map(game.map);
+		
 		ft_putstr_fd("Error: Failed to extract map info\n", STDERR_FILENO);
 		free_game(&game);
-		exit(1);
+		return(0);
 	}
 	if (!game.map)
 	{
 		ft_putstr_fd("Error: Invalid map\n", STDERR_FILENO);
 		free_game(&game);
-		return (1);
+		return (0);
 	}
 	print_map(game.map);
 	printGameStruct(&game);
  	if (initialize_mlx_and_launch_game(&game) == -1)
 	{
 		ft_putstr_fd("Error: Failed to initialize graphics\n", STDERR_FILENO);
-		ft_free_map(game.map);
-		return (1);
-	} 
-		
+		free_game(&game);
+		return (0);
+	}
 	free_game(&game);
-	return (0);
+	return (1);
 }
 
-// make a 2D window with walls and player looking at a direction
-// define the size of each square in the map and change color of the square based on type
+// // make a 2D window with walls and player looking at a direction
+// // define the size of each square in the map and change color of the square based on type
 
 
-/* valgrind --leak-check=full --show-leak-kinds=all ./cub3d maps/map4.cub */
+// /* valgrind --leak-check=full --show-leak-kinds=all ./cub3d maps/map4.cub */

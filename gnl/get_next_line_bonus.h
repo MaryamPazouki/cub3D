@@ -43,5 +43,5 @@ int		ft_read_lst(int fd, t_gnl_list **lst, int temp_rd, int acum);
 char	*ft_create_residual(char *str, char	**residual, char **line);
 char	*get_next_line(int fd);
 int		ft_free_rd(char *buffer, t_gnl_list **lst);
-void	free_all_gnl_residuals(void);
+//void	free_all_gnl_residuals(void);
 #endif

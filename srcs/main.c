@@ -6,13 +6,13 @@
 /*   By: mpazouki <mpazouki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 11:25:31 by mpazouki          #+#    #+#             */
-/*   Updated: 2025/06/04 09:06:00 by mpazouki         ###   ########.fr       */
+/*   Updated: 2025/06/04 09:27:03 by mpazouki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main_header.h"
 //here is the last version to subbmit
-
+//here is the last version to subbmit
 
 static void printGameStruct(t_game *game) {
 	printf("n_wall_path: %s\n", game->textures_info.n_wall_path);

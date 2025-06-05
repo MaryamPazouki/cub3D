@@ -12,16 +12,6 @@
 
 #include "main_header.h"
 
-// int	ft_strlen_with_space(const char *map)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (map[i])
-// 		i++;
-// 	return (i);
-// }
-
 int	map_height(char **map)
 {
 	int	i;

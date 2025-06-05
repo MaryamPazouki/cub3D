@@ -24,14 +24,20 @@ int		encode_rgb(int r, int g, int b);
 char	**ft_split_tokens(const char *str, const char *charset);
 
 // map_parser.c
-int		extract_map_info(char *map_file, t_game *game);
+//int		extract_map_info(char *map_file, t_game *game);
 int     validate_map(t_game *game, char **original_map);
 
-// valid texture path
-//int	validate_texture_paths(t_game *game);
+//handle texture and validate
+int 	handle_texture_directive(t_game *game, const char *key, const char *path);
 
+// handle_color_directive.c
+int 	handle_color_directive(t_game *game, const char *key, const char *value);
+
+//read_map.c
+int		append_map_line(t_game *game, char *line);
+int		is_map_line(const char *line);
 
 // map_validation
-
+int 	parse_map_file(const char *filepath, t_game *game);
 
 #endif

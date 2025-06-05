@@ -68,7 +68,7 @@ void	set_minimap_dimensions(t_game *game)
 	game->map_rows = i;
 	while (game->map[0][j])
 		j++;
-	game->map_width = j * GRID_SIZE;
+	game->map_width = game->map_width * GRID_SIZE;
 	game->map_cols = j;
 	game->x_start_minimap = (WIN_WIDTH - game->map_width) - 10;
 	game->y_start_minimap = (WIN_HEIGHT - game->map_height) - 10;

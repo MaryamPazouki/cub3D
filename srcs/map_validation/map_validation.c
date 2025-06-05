@@ -94,7 +94,7 @@ static char **normalized_map(char **map, int height, int width)
 	i = 0;
 	normalized = malloc(sizeof(char *) * (height + 3));
 	if (!normalized)
-		return NULL;
+		return (NULL);
 
 	normalized[0] = create_padding_row(width);
 	while(i < height)
@@ -104,7 +104,7 @@ static char **normalized_map(char **map, int height, int width)
 	}
 	normalized[height + 1] = create_padding_row(width);
 	normalized[height + 2] = NULL;
-	return normalized;
+	return (normalized);
 }
 
 
@@ -158,15 +158,15 @@ static int validate_map_enclosure_and_reachability(char **normalized_map, int st
 	{
 		ft_putstr_fd("Error: Not all walkable areas are reachable\n", STDERR_FILENO);
 		return (0);
-        //exit(1);
 	}
 	return (1);
 }
 
-static int find_player_position(char **map, double *pos_x, double *pos_y)
+static int find_player_position(t_game *game, char **map, double *pos_x, double *pos_y)
 {
 	int y = 0;
-	int x, count = 0;
+	int x;
+	int count = 0;
 
 	while (map[y])
 	{
@@ -179,8 +179,19 @@ static int find_player_position(char **map, double *pos_x, double *pos_y)
 				count++;
 				if (count > 1)
 					return 0;
-				*pos_x = x;
-				*pos_y = y;
+				if (map[y][x] == 'N')
+                    game->dir_angle = 3 * M_PI / 2;
+                else if (map[y][x] == 'S')
+                    game->dir_angle = M_PI / 2;
+                else if (map[y][x] == 'E')
+                    game->dir_angle = 0;
+                else if (map[y][x] == 'W')
+                    game->dir_angle = M_PI;
+				*pos_x = x + 0.5;
+				*pos_y = y + 0.5;
+				map[y][x] = '0';
+				game->dir_x = cos(game->dir_angle);
+                game->dir_y = sin(game->dir_angle);
 			}
 			x++;
 		}
@@ -210,41 +221,36 @@ static void sanitize_map(t_game *game, char **map)
 
 int validate_map(t_game *game, char **original_map)
 {
-	printf("Validating map...\n");
 	char **normalized;
+
     game->map_height = map_height(original_map);
 	game->map_width = map_max_width(original_map);
-    if (game->map_height > 15 || game->map_width > 35)
+    if (game->map_height > 50 || game->map_width > 55)
     {
-        ft_putstr_fd("Error: Map is so big\n", STDERR_FILENO);
+        ft_putstr_fd("\033[31mError: Map size is out of bound\033[0m\n", STDERR_FILENO);
         ft_free_map(original_map);
-		exit(1);
+		return(0);
     }
-    if (!find_player_position(original_map, &game->pos_x, &game->pos_y))
+    if (!find_player_position(game ,original_map, &game->pos_x, &game->pos_y))
 	{
-		ft_putstr_fd("Error: Invalid or multiple player positions\n", STDERR_FILENO);
+		ft_putstr_fd("\033[31mError: Invalid player position!\033[0m\n", STDERR_FILENO);
 		ft_free_map(original_map);
-		exit(1);
+		return(0);
 	}
 	sanitize_map(game, original_map);
 	normalized = normalized_map(original_map, game->map_height, game->map_width);
-	// for (int i = 0; original_map[i]; i++)
-    // 	printf("%s\n", original_map[i]); 
 	if (!normalized)
 	{
 		ft_putstr_fd("Error: Memory allocation failed\n", STDERR_FILENO);
 		ft_free_map(original_map);
-		exit(1);
+		return(0);
 	}
-
-     // Adjusted due to padding
 	if (!validate_map_enclosure_and_reachability(normalized, game->pos_x + 1, game->pos_y + 1))
     {
         ft_free_map(normalized);
-        ft_free_map(original_map);
-        exit(1);
+      // ft_free_map(original_map);
+        return(0);
     }
-	printf("Validating map structure...\n");
 	ft_free_map(normalized);
 	return 1;
 }

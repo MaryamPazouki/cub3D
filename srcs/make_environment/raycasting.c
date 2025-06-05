@@ -65,6 +65,9 @@ void	init_ray_side_distances(t_game *game, t_ray_params *ray)
 		ray->dist_to_y_wall = 1e30;
 }
 
+// if (ray->map_y >= 0 && ray->map_y < game->map_height && ray->map_x >= 0
+// 	&& ray->map_x < game->map_width)
+
 int	perform_dda_loop(t_game *game, t_ray_params *ray)
 {
 	while (1)
@@ -83,8 +86,10 @@ int	perform_dda_loop(t_game *game, t_ray_params *ray)
 			if (game->map[ray->map_y][ray->map_x] != '1')
 				ray->dist_to_y_wall += ray->delta_dist_y;
 		}
-		if (ray->map_y >= 0 && ray->map_y < game->map_rows && ray->map_x >= 0
-			&& ray->map_x < game->map_cols)
+		// if (ray->map_y >= 0 && ray->map_y < game->map_rows && ray->map_x >= 0
+		// 	&& ray->map_x < game->map_cols)
+		if (ray->map_y >= 0 && ray->map_y < game->map_height && ray->map_x >= 0
+		&& ray->map_x < game->map_width)
 		{
 			if (game->map[ray->map_y][ray->map_x] == '1')
 				return (0);

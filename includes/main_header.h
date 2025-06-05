@@ -22,7 +22,6 @@
 void	print_map(char **map);
 int		cast_rays(t_game *game, double dir_angle, double *first_cross_dist);
 
-int		extract_map_info(char *map_file, t_game *game);
 
 
 

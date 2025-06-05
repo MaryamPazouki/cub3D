@@ -1,7 +1,7 @@
-NO ./textures/walls/n_walls_0.xpm
-SO ./textures/walls/s_walls_0.xpm
-WE ./textures/walls/w_walls_0.xpm
-EA ./textures/walls/e_walls_0.xpm
+NO textures/north_wall.xpm
+SO textures/mossy.xpm
+WE textures/greystone.xpm
+EA textures/colorstone.xpm
 
 F 20,20,20
 C 200,200,200

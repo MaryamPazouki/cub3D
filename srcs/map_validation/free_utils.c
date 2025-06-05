@@ -26,7 +26,7 @@ void	ft_free_map(char **map)
 		free(map[i]);
 		i++;
 	}
-	free(map);
+    free(map);
 }
 void free_game(t_game *game)
 {
@@ -42,13 +42,6 @@ void free_game(t_game *game)
     if (game->textures_info.e_wall_path)
         free(game->textures_info.e_wall_path);
     // ...free other heap allocations...
-}
-void	free_all_and_exit(t_game *game, const char *msg, int status)
-{
-	if (msg)
-		fprintf(stderr, "Error: %s\n", msg);
-	free_game(game);
-	exit(status);
 }
 
 void free_tokens(char **tokens)

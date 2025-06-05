@@ -204,5 +204,5 @@ void	cast_fov_rays(t_game *game);
 // Add to main_header.h
 int		cast_rays(t_game *game, double dir_angle, double *first_cross_dist);
 
-int		extract_map_info(char *map_file, t_game *game);
+//int		extract_map_info(char *map_file, t_game *game);
 #endif

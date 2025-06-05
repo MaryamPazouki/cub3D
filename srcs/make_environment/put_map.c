@@ -65,7 +65,7 @@ void	cast_and_creat_pseudo_3d_env(t_game *game)
 		ray_angle = angle_init + (i * game->ray_step);
 		if (cast_rays(game, ray_angle, &game->true_ray_dist) == -1)
 		{
-			ft_putstr_fd("Error: Ray out of map bounds\n", STDERR_FILENO);
+			ft_putstr_fd("Error: Ray out of map boundss\n", STDERR_FILENO);
 			free_game_struct(game);
 			exit (1);
 		}

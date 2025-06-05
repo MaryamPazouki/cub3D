@@ -22,6 +22,14 @@ void	free_game_struct(t_game *game)
 	mlx_destroy_image(game->mlx, game->loaded_textures.s_wall);
 	mlx_destroy_image(game->mlx, game->loaded_textures.e_wall);
 	mlx_destroy_display(game->mlx);
+	// if (game->textures_info.n_wall_path)
+        free(game->textures_info.n_wall_path);
+    // if (game->textures_info.s_wall_path)
+        free(game->textures_info.s_wall_path);
+    // if (game->textures_info.w_wall_path)
+        free(game->textures_info.w_wall_path);
+    // if (game->textures_info.e_wall_path)
+        free(game->textures_info.e_wall_path);
 	free(game->mlx);
 }
 

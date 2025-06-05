@@ -9,29 +9,29 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-// map_validation_utils.c
+// free_utils.c
 void	ft_free_map(char **map);
-//void free_textures_info(t_textures_info *t);
-void free_game(t_game *game);
-int encode_rgb(int r, int g, int b);
-void free_tokens(char **tokens);
+void	free_game(t_game *game);
+void	free_tokens(char **tokens);
 
 
 
-/* int parse_map_file(const char *filepath, t_game *game);
+//  int parse_map_file(const char *filepath, t_game *game);
 
-
-int has_cub_extension(const char *filename); */
-
+// map_validation_utils.c
+int		has_cub_extension(const char *filename);
+int		encode_rgb(int r, int g, int b);
 char	**ft_split_tokens(const char *str, const char *charset);
-int extract_map_info(char *map_file, t_game *game);
 
+// map_parser.c
+int		extract_map_info(char *map_file, t_game *game);
+int     validate_map(t_game *game, char **original_map);
 
 // valid texture path
 //int	validate_texture_paths(t_game *game);
 
 
 // map_validation
-int     validate_map(t_game *game, char **original_map);
+
 
 #endif

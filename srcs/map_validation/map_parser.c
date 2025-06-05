@@ -227,100 +227,31 @@ static int handle_color_directive(t_game *game, const char *key, const char *val
     return (1); // Return error for unknown key
 }
 
-static int is_texture_directive(const char *token)
-{
-	return (!ft_strcmp(token, "NO") ||
-			!ft_strcmp(token, "SO") ||
-			!ft_strcmp(token, "WE") ||
-			!ft_strcmp(token, "EA"));
-}
-
-static int is_color_directive(const char *token)
-{
-	return (!ft_strcmp(token, "F") ||
-			!ft_strcmp(token, "C"));
-}
-
-static int handle_directive_error(char **tokens, const char *message)
-{
-	fprintf(stderr, "Error: %s\n", message);
-	free_tokens(tokens);
-	return (0);
-}
-
-static int process_texture_directive(t_game *game, char **tokens)
-{
-	if (handle_texture_directive(game, tokens[0], tokens[1]))
-	{
-		free_tokens(tokens);
-		return (0);
-	}
-	free_tokens(tokens);
-	return (1);
-}
-
-static int process_color_directive(t_game *game, char **tokens)
-{
-	if (handle_color_directive(game, tokens[0], tokens[1]))
-	{
-		free_tokens(tokens);
-		return (1); // return 1 on success
-	}
-	free_tokens(tokens);
-	return (0);
-}
-
-int parse_directive(t_game *game, char *line)
-{
-	char **tokens = ft_split_tokens(line, " \t");
-
-	if (!tokens || !tokens[0] || !tokens[1])
-		return handle_directive_error(tokens, "Invalid directive format");
-
-	if (is_texture_directive(tokens[0]))
-		return process_texture_directive(game, tokens);
-	else if (is_color_directive(tokens[0]))
-		return process_color_directive(game, tokens);
-	else
-	{
-		char msg[256];
-		snprintf(msg, sizeof(msg), "Unknown directive: %s", tokens[0]);
-		return handle_directive_error(tokens, msg);
-	}
-}
-
-// //parse texture and colors
-// int parse_directive(t_game *game, char *line)
+// static int is_texture_directive(const char *token)
 // {
-// 	char **tokens;
+// 	return (!ft_strcmp(token, "NO") ||
+// 			!ft_strcmp(token, "SO") ||
+// 			!ft_strcmp(token, "WE") ||
+// 			!ft_strcmp(token, "EA"));
+// }
 
-// 	tokens = ft_split_tokens(line, " \t");
-// 	if (!tokens || !tokens[0] || !tokens[1])
+// static int is_color_directive(const char *token)
+// {
+// 	return (!ft_strcmp(token, "F") ||
+// 			!ft_strcmp(token, "C"));
+// }
+
+// static int handle_directive_error(char **tokens, const char *message)
+// {
+// 	fprintf(stderr, "Error: %s\n", message);
+// 	free_tokens(tokens);
+// 	return (0);
+// }
+
+// static int process_texture_directive(t_game *game, char **tokens)
+// {
+// 	if (handle_texture_directive(game, tokens[0], tokens[1]))
 // 	{
-// 		fprintf(stderr, "Error: Invalid directive format\n");
-// 		free_tokens(tokens);
-// 		return (0);
-// 	}
-// 	if (!ft_strcmp(tokens[0], "NO") || !ft_strcmp(tokens[0], "SO") ||
-// 		!ft_strcmp(tokens[0], "WE") || !ft_strcmp(tokens[0], "EA"))
-// 	{
-// 		if (handle_texture_directive(game, tokens[0], tokens[1]))
-// 		{
-// 			free_tokens(tokens);
-// 			return (0);
-// 		}
-// 	}
-// 	else if (!ft_strcmp(tokens[0], "F") || !ft_strcmp(tokens[0], "C"))
-// 	{
-// 		if (handle_color_directive(game, tokens[0], tokens[1]))
-// 		{
-// 			free_tokens(tokens);
-// 			return (1);
-// 		}
-// 	}
-// 	else
-// 	{
-//  		fprintf(stderr, "Error: Unknown directive: %s\n", tokens[0]);
 // 		free_tokens(tokens);
 // 		return (0);
 // 	}
@@ -328,19 +259,79 @@ int parse_directive(t_game *game, char *line)
 // 	return (1);
 // }
 
+// static int process_color_directive(t_game *game, char **tokens)
+// {
+// 	if (handle_color_directive(game, tokens[0], tokens[1]))
+// 	{
+// 		free_tokens(tokens);
+// 		return (1); // return 1 on success
+// 	}
+// 	free_tokens(tokens);
+// 	return (0);
+// }
+
+// int parse_directive(t_game *game, char *line)
+// {
+// 	char **tokens = ft_split_tokens(line, " \t");
+
+// 	if (!tokens || !tokens[0] || !tokens[1])
+// 		return handle_directive_error(tokens, "Invalid directive format");
+
+// 	if (is_texture_directive(tokens[0]))
+// 		return process_texture_directive(game, tokens);
+// 	else if (is_color_directive(tokens[0]))
+// 		return process_color_directive(game, tokens);
+// 	else
+// 	{
+// 		char msg[256];
+// 		snprintf(msg, sizeof(msg), "Unknown directive: %s", tokens[0]);
+// 		return handle_directive_error(tokens, msg);
+// 	}
+// }
+
+//parse texture and colors
+int parse_directive(t_game *game, char *line)
+{
+	char **tokens;
+
+	tokens = ft_split_tokens(line, " \t");
+	if (!tokens || !tokens[0] || !tokens[1])
+	{
+		fprintf(stderr, "Error: Invalid directive format\n");
+		free_tokens(tokens);
+		return (0);
+	}
+	if (!ft_strcmp(tokens[0], "NO") || !ft_strcmp(tokens[0], "SO") ||
+		!ft_strcmp(tokens[0], "WE") || !ft_strcmp(tokens[0], "EA"))
+	{
+		if (handle_texture_directive(game, tokens[0], tokens[1]))
+		{
+			free_tokens(tokens);
+			return (0);
+		}
+	}
+	else if (!ft_strcmp(tokens[0], "F") || !ft_strcmp(tokens[0], "C"))
+	{
+		if (handle_color_directive(game, tokens[0], tokens[1]))
+		{
+			free_tokens(tokens);
+			return (0);
+		}
+	}
+	else
+	{
+ 		fprintf(stderr, "Error: Unknown directive: %s\n", tokens[0]);
+		free_tokens(tokens);
+		return (0);
+	}
+	free_tokens(tokens);
+	return (1);
+}
+
 
 //------------------------Extracting Map-------------------------
 
-// check map extension
-static int has_cub_extension(const char *filename)
-{
-	int len;
 
-	len = ft_strlen(filename);
-	if (len < 4)
-		return(0);
-	return(ft_strncmp(filename + (len - 4 ), ".cub", 4) == 0);
-}
 
 static void count_player_in_line(t_game *game, const char *line)
 {
@@ -521,7 +512,6 @@ int read_map_file(t_game *game, int fd)
 		trimmed = ft_strtrim(line, " \t\n");
 		if (!trimmed)
 		{
-			free(trimmed);
     		free(line);
 			return (fprintf(stderr, "Memory allocation error\n"), 0);
 		}
@@ -556,6 +546,7 @@ int read_map_file(t_game *game, int fd)
 
 			// Not a directive, not a map line → garbage
 			fprintf(stderr, "\033[31mError: Invalid directive or garbage line:\033[0m %s\n", line);
+			free(trimmed);
 			free(line);
 			return (0);
 		}
@@ -566,6 +557,7 @@ int read_map_file(t_game *game, int fd)
 			if (!handle_map_line(game, line))
 			{
 				fprintf(stderr, "\033[31mError: Invalid map line:\033[0m %s\n", line);
+				free(trimmed);
 				free(line);
 				return (0);
 			}

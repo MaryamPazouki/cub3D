@@ -23,6 +23,7 @@ SRCS = main.c \
 		map_validation/map_validation.c \
 		map_validation/map_parser.c \
 		map_validation/map_validation_utils.c \
+		map_validation/free_utils.c \
 		make_environment/initialize_game_struct.c \
 		make_environment/initialize_mlx.c \
 		make_environment/raycasting.c \

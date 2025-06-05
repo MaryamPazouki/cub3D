@@ -12,6 +12,8 @@
 
 #include "get_next_line.h"
 
+static char		*residual = NULL;
+
 int	ft_free_rd(char *buffer, t_gnl_list **lst)
 {
 	free (buffer);
@@ -94,7 +96,7 @@ char	*ft_line_assembly(t_gnl_list **lst, char **residual, int read_n)
 
 char	*get_next_line(int fd)
 {
-	static char		*residual = NULL;
+	//static char		*residual = NULL;
 	t_gnl_list		*line_lst;
 	int				read_n;
 
@@ -114,6 +116,16 @@ char	*get_next_line(int fd)
 		return (NULL);
 	return (ft_line_assembly(&line_lst, &residual, read_n));
 }
+void	get_next_line_cleanup(void)
+{
+    //extern char	*residual; // Not standard C, but you can move static to file-scope for this
+    if (residual)
+    {
+        free(residual);
+        residual = NULL;
+    }
+}
+
 
 // #include <stdio.h>
 // int	main(void)
